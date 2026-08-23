@@ -36,6 +36,8 @@ log = logging.getLogger(__name__)
 
 ROOT = Path(__file__).resolve().parent.parent
 MASTER_PARQUET = ROOT / "Datasets" / "master" / "MASTER_DATASET.parquet"
+if not MASTER_PARQUET.exists():
+    MASTER_PARQUET = ROOT / "data_integration_v2" / "master" / "MASTER_DATASET_V2.parquet"
 V2_TEST = ROOT / "ML_V2" / "data" / "prepared" / "test.parquet"
 V2_PREDS = ROOT / "ML_V2" / "predictions" / "final_test_predictions.csv"
 V2_PROFILE = ROOT / "ML_V2" / "data" / "metadata" / "dataset_profile.json"

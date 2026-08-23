@@ -257,6 +257,16 @@ def compute_explanation(patient_features: dict) -> list:
 # API ENDPOINTS
 # ══════════════════════════════════════════════════════════════════════════════
 
+@app.get("/")
+def root():
+    return {
+        "service": "CarePath API Server",
+        "status": "online",
+        "docs_url": "/docs",
+        "health_check": "/api/health",
+        "frontend_app": "http://localhost:3000"
+    }
+
 @app.get("/api/health")
 def health():
     total_pts = db.get_total_patient_count()
