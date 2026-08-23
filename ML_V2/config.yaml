@@ -1,0 +1,44 @@
+project:
+  name: CarePath Navigator ML V2
+  use_case: "Use Case 7 - Avoidable ED Utilization"
+  version: "2.0"
+
+data:
+  master_path: "D:/CTS/Datasets/master/MASTER_DATASET.parquet"
+  new_datasets:
+    pde: "D:/CTS/Datasets/new/pde.csv"
+    dme: "D:/CTS/Datasets/new/dme.csv"
+    hha: "D:/CTS/Datasets/new/hha.csv"
+    snf: "D:/CTS/Datasets/new/snf.csv"
+    hospice: "D:/CTS/Datasets/new/hospice.csv"
+  delimiter: "|"
+  prediction_unit: "beneficiary-year"
+
+target:
+  column: "NAV_OPP_TARGET"
+  definition: "AHRQ PQE-flagged ED visit in label year"
+  type: "proxy_weak_supervision"
+
+temporal:
+  train_feature_years: [2015, 2016, 2017, 2018]
+  train_label_year: 2019
+  valid_feature_years: [2016, 2017, 2018, 2019]
+  valid_label_year: 2020
+  test_feature_years: [2017, 2018, 2019, 2020]
+  test_label_year: 2021
+
+model:
+  random_seed: 42
+  gpu_device: "cuda"
+  tree_method: "hist"
+
+output:
+  root: "D:/CTS/ML_V2"
+
+v1_baseline:
+  lr_roc_auc: 0.8704
+  rf_roc_auc: 0.8517
+  xgb_roc_auc: 0.8607
+  ensemble_roc_auc: 0.8718
+  ensemble_pr_auc: 0.1796
+  target_roc_auc: 0.92

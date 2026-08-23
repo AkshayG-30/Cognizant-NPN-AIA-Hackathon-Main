@@ -1,0 +1,18 @@
+Datasets/
+Documentation/
+Research Papers/
+Test sources/
+venv/
+.venv/
+__pycache__/
+*.pyc
+*.pyo
+*.db
+.env
+scratch/
+graphify-out/
+node_modules/
+.next/
+build/
+dist/
+.DS_Store

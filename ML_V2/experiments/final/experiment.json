@@ -1,0 +1,99 @@
+{
+  "v2_features": 58,
+  "v1_features": 45,
+  "new_features": 13,
+  "best_model": "Ensemble_V2",
+  "best_roc": 0.8816,
+  "best_pr": 0.1842,
+  "target_achieved": false,
+  "gpu": "cuda",
+  "results": [
+    {
+      "model": "LR_V2",
+      "set": "test",
+      "ROC_AUC": 0.8783,
+      "PR_AUC": 0.1535,
+      "F1": 0.214,
+      "Precision": 0.1566,
+      "Recall": 0.3377,
+      "Brier": 0.0726,
+      "Threshold": 0.88
+    },
+    {
+      "model": "RF_V2",
+      "set": "test",
+      "ROC_AUC": 0.8459,
+      "PR_AUC": 0.1728,
+      "F1": 0.1996,
+      "Precision": 0.1198,
+      "Recall": 0.5974,
+      "Brier": 0.0135,
+      "Threshold": 0.18
+    },
+    {
+      "model": "XGB_V2",
+      "set": "test",
+      "ROC_AUC": 0.876,
+      "PR_AUC": 0.1647,
+      "F1": 0.2135,
+      "Precision": 0.1362,
+      "Recall": 0.4935,
+      "Brier": 0.0762,
+      "Threshold": 0.55
+    },
+    {
+      "model": "Ensemble_V2",
+      "set": "test",
+      "ROC_AUC": 0.8816,
+      "PR_AUC": 0.1842,
+      "F1": 0.2202,
+      "Precision": 0.1337,
+      "Recall": 0.6234,
+      "Brier": 0.0452,
+      "Threshold": 0.57
+    }
+  ],
+  "v1v2": [
+    {
+      "model": "LR",
+      "V1_ROC": 0.8704,
+      "V2_ROC": 0.8783,
+      "V1_PR": 0.1596,
+      "V2_PR": 0.1535,
+      "delta_ROC": 0.0079,
+      "delta_PR": -0.0061
+    },
+    {
+      "model": "RF",
+      "V1_ROC": 0.8517,
+      "V2_ROC": 0.8459,
+      "V1_PR": 0.17,
+      "V2_PR": 0.1728,
+      "delta_ROC": -0.0058,
+      "delta_PR": 0.0028
+    },
+    {
+      "model": "XGB",
+      "V1_ROC": 0.8607,
+      "V2_ROC": 0.876,
+      "V1_PR": 0.1687,
+      "V2_PR": 0.1647,
+      "delta_ROC": 0.0153,
+      "delta_PR": -0.004
+    },
+    {
+      "model": "Ensemble",
+      "V1_ROC": 0.8718,
+      "V2_ROC": 0.8816,
+      "V1_PR": 0.1796,
+      "V2_PR": 0.1842,
+      "delta_ROC": 0.0098,
+      "delta_PR": 0.0046
+    }
+  ],
+  "ensemble_weights": [
+    0.5,
+    0.3,
+    0.2
+  ]
+}

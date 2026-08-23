@@ -1,0 +1,458 @@
+dataset,column,dtype,null_count,null_pct,unique_count,sample_values,is_in_master,possible_join_key
+PDE,PDE_ID,str,0,0.0,515520,"['-10602140347', '-10602140348', '-10602140349']",False,False
+PDE,BENE_ID,str,0,0.0,7403,"['-10000010254618', '-10000010254618', '-10000010254618']",True,True
+PDE,SRVC_DT,str,0,0.0,2918,"['25-Mar-2015', '27-May-2016', '03-Oct-2016']",False,False
+PDE,PD_DT,str,0,0.0,2918,"['25-Mar-2015', '27-May-2016', '03-Oct-2016']",False,False
+PDE,PRSCRBR_ID_QLFYR_CD,str,0,0.0,1,"['01', '01', '01']",False,False
+PDE,PRSCRBR_ID,str,0,0.0,2441,"['9999987089', '9999999569', '9999997109']",False,False
+PDE,RX_SRVC_RFRNC_NUM,str,0,0.0,515520,"['-10602140347', '-10602140348', '-10602140349']",False,False
+PDE,PROD_SRVC_ID,str,0,0.0,14627,"['68115025030', '53978010903', '55154010000']",False,False
+PDE,PLAN_CNTRCT_REC_ID,str,0,0.0,10,"['Z0009', 'Z0005', 'Z0005']",False,False
+PDE,PLAN_PBP_REC_NUM,str,0,0.0,1,"['999', '999', '999']",False,False
+PDE,CMPND_CD,str,0,0.0,1,"['0', '0', '0']",False,False
+PDE,DAW_PROD_SLCTN_CD,str,0,0.0,9,"['7', '1', '2']",False,False
+PDE,QTY_DSPNSD_NUM,str,0,0.0,91,"['63', '7', '90']",False,False
+PDE,DAYS_SUPLY_NUM,str,0,0.0,90,"['63', '7', '90']",False,False
+PDE,FILL_NUM,str,0,0.0,13,"['1', '1', '1']",False,False
+PDE,DSPNSNG_STUS_CD,str,0,0.0,1,"[' ', ' ', ' ']",False,False
+PDE,DRUG_CVRG_STUS_CD,str,0,0.0,1,"['C', 'C', 'C']",False,False
+PDE,ADJSTMT_DLTN_CD,str,0,0.0,1,"[' ', ' ', ' ']",False,False
+PDE,NSTD_FRMT_CD,str,0,0.0,1,"[' ', ' ', ' ']",False,False
+PDE,PRCNG_EXCPTN_CD,str,515520,100.0,0,[],False,False
+PDE,CTSTRPHC_CVRG_CD,str,499982,97.0,2,"['A', 'C', 'C']",False,False
+PDE,GDC_BLW_OOPT_AMT,str,0,0.0,77139,"['0.00', '0.00', '0.00']",False,False
+PDE,GDC_ABV_OOPT_AMT,str,0,0.0,14943,"['0', '0', '0']",False,False
+PDE,PTNT_PAY_AMT,str,0,0.0,17644,"['0.00', '0.00', '0.00']",False,False
+PDE,OTHR_TROOP_AMT,str,0,0.0,1,"['0', '0', '0']",False,False
+PDE,LICS_AMT,str,0,0.0,1,"['0', '0', '0']",False,False
+PDE,PLRO_AMT,str,0,0.0,23467,"['55.04', '484.13', '240.98']",False,False
+PDE,CVRD_D_PLAN_PD_AMT,str,0,0.0,55038,"['220.15', '1936.54', '963.93']",False,False
+PDE,NCVRD_PLAN_PD_AMT,str,0,0.0,1,"['0.00', '0.00', '0.00']",False,False
+PDE,TOT_RX_CST_AMT,str,0,0.0,64869,"['275.19', '2420.67', '1204.91']",False,False
+PDE,RX_ORGN_CD,str,0,0.0,3,"['4', '0', '0']",False,False
+PDE,RPTD_GAP_DSCNT_NUM,str,0,0.0,1,"['0', '0', '0']",False,False
+PDE,BRND_GNRC_CD,str,0,0.0,2,"['G', 'B', 'B']",False,False
+PDE,PHRMCY_SRVC_TYPE_CD,str,0,0.0,7,"['05', '01', '02']",False,False
+PDE,PTNT_RSDNC_CD,str,0,0.0,2,"['01', '01', '01']",False,False
+PDE,SUBMSN_CLR_CD,str,515520,100.0,0,[],False,False
+DME,BENE_ID,str,0,0.0,5576,"['-10000010254618', '-10000010254618', '-10000010254618']",True,True
+DME,CLM_ID,str,0,0.0,37782,"['-10000930037927', '-10000930037958', '-10000930037981']",True,True
+DME,NCH_NEAR_LINE_REC_IDENT_CD,str,0,0.0,1,"['M', 'M', 'M']",True,False
+DME,NCH_CLM_TYPE_CD,str,0,0.0,1,"['82', '82', '82']",True,False
+DME,CLM_FROM_DT,str,0,0.0,2926,"['25-Mar-2015', '03-Oct-2016', '15-Oct-2018']",True,False
+DME,CLM_THRU_DT,str,0,0.0,2926,"['25-Mar-2015', '03-Oct-2016', '15-Oct-2018']",True,False
+DME,NCH_WKLY_PROC_DT,str,0,0.0,417,"['24-Apr-2015', '07-Oct-2016', '19-Oct-2018']",True,False
+DME,CARR_CLM_ENTRY_CD,str,0,0.0,1,"['1', '1', '1']",True,False
+DME,CLM_DISP_CD,str,0,0.0,1,"['1', '1', '1']",True,False
+DME,CARR_NUM,str,0,0.0,51,"['00510', '00510', '00510']",True,False
+DME,CARR_CLM_PMT_DNL_CD,str,0,0.0,1,"['1', '1', '1']",True,False
+DME,CLM_PMT_AMT,str,0,0.0,1337,"['0.00', '6.82', '6.82']",True,False
+DME,CARR_CLM_PRMRY_PYR_PD_AMT,str,0,0.0,1337,"['0.00', '6.82', '6.82']",True,False
+DME,CARR_CLM_PRVDR_ASGNMT_IND_SW,str,0,0.0,1,"['A', 'A', 'A']",True,False
+DME,NCH_CLM_PRVDR_PMT_AMT,str,0,0.0,1337,"['0.00', '6.82', '6.82']",True,False
+DME,NCH_CLM_BENE_PMT_AMT,str,0,0.0,1,"['0', '0', '0']",True,False
+DME,NCH_CARR_CLM_SBMTD_CHRG_AMT,str,0,0.0,1233,"['0.00', '8.53', '8.53']",True,False
+DME,NCH_CARR_CLM_ALOWD_AMT,str,0,0.0,1337,"['0.00', '6.82', '6.82']",True,False
+DME,CARR_CLM_CASH_DDCTBL_APLD_AMT,str,0,0.0,126,"['0.00', '0.00', '0.00']",True,False
+DME,CARR_CLM_HCPCS_YR_CD,str,0,0.0,1,"['1', '1', '1']",True,False
+DME,PRNCPAL_DGNS_CD,str,0,0.0,212,"['S134XX', 'Z9189', 'Z591']",True,False
+DME,PRNCPAL_DGNS_VRSN_CD,str,0,0.0,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD1,str,0,0.0,214,"['S134XX', 'Z9189', 'Z591']",True,False
+DME,ICD_DGNS_VRSN_CD1,str,0,0.0,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD2,str,0,0.0,239,"['R4689', 'E781', 'M7918']",True,False
+DME,ICD_DGNS_VRSN_CD2,str,0,0.0,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD3,str,26,0.0,237,"['E781', 'J329', 'E781']",True,False
+DME,ICD_DGNS_VRSN_CD3,str,26,0.0,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD4,str,151,0.1,229,"['J329', 'E119', 'J329']",True,False
+DME,ICD_DGNS_VRSN_CD4,str,151,0.1,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD5,str,545,0.5,223,"['E119', 'D649', 'E119']",True,False
+DME,ICD_DGNS_VRSN_CD5,str,545,0.5,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD6,str,1614,1.6,210,"['D649', 'E849', 'D649']",True,False
+DME,ICD_DGNS_VRSN_CD6,str,1614,1.6,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD7,str,3663,3.5,205,"['E849', 'B965', 'E849']",True,False
+DME,ICD_DGNS_VRSN_CD7,str,3663,3.5,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD8,str,6781,6.5,196,"['B965', 'N469', 'B965']",True,False
+DME,ICD_DGNS_VRSN_CD8,str,6781,6.5,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD9,str,11256,10.8,192,"['N469', 'E849', 'E848']",True,False
+DME,ICD_DGNS_VRSN_CD9,str,11256,10.8,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD10,str,16871,16.2,187,"['E849', 'E849', 'D649']",True,False
+DME,ICD_DGNS_VRSN_CD10,str,16871,16.2,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD11,str,23728,22.9,183,"['E089', 'B965', 'B965']",True,False
+DME,ICD_DGNS_VRSN_CD11,str,23728,22.9,1,"['0', '0', '0']",True,False
+DME,ICD_DGNS_CD12,str,30536,29.4,173,"['B965', 'N469', 'N469']",True,False
+DME,ICD_DGNS_VRSN_CD12,str,30536,29.4,1,"['0', '0', '0']",True,False
+DME,RFR_PHYSN_UPIN,str,97476,93.9,214,"['01-T144', 'H61233', 'H61233']",True,False
+DME,RFR_PHYSN_NPI,str,0,0.0,2559,"['9999841890', '9999971093', '9999971093']",True,False
+DME,CLM_CLNCL_TRIL_NUM,str,103828,100.0,0,[],True,False
+DME,LINE_NUM,str,0,0.0,9,"['1', '1', '1']",True,False
+DME,TAX_NUM,str,0,0.0,2559,"['999562511', '999349929', '999349929']",True,False
+DME,PRVDR_SPCLTY,str,0,0.0,1,"['01', '01', '01']",True,False
+DME,PRTCPTNG_IND_CD,str,0,0.0,7,"['2', '6', '6']",True,False
+DME,LINE_SRVC_CNT,str,0,0.0,138,"['43', '12', '13']",True,False
+DME,LINE_CMS_TYPE_SRVC_CD,str,0,0.0,4,"['R', 'P', 'P']",True,False
+DME,LINE_PLACE_OF_SRVC_CD,str,0,0.0,9,"['31', '11', '11']",True,False
+DME,LINE_1ST_EXPNS_DT,str,0,0.0,2926,"['25-Mar-2015', '03-Oct-2016', '15-Oct-2018']",True,False
+DME,LINE_LAST_EXPNS_DT,str,0,0.0,2916,"['18-Apr-2015', '03-Oct-2016', '15-Oct-2018']",True,False
+DME,HCPCS_CD,str,0,0.0,40,"['K0002', 'A4253', 'A4253']",True,False
+DME,HCPCS_1ST_MDFR_CD,str,103828,100.0,0,[],True,False
+DME,HCPCS_2ND_MDFR_CD,str,103828,100.0,0,[],True,False
+DME,BETOS_CD,str,0,0.0,5,"['D1D', 'D1E', 'D1E']",True,False
+DME,LINE_NCH_PMT_AMT,str,0,0.0,1190,"['0.00', '6.82', '6.82']",True,False
+DME,LINE_BENE_PMT_AMT,str,0,0.0,1,"['0', '0', '0']",True,False
+DME,LINE_PRVDR_PMT_AMT,str,0,0.0,1190,"['0.00', '6.82', '6.82']",True,False
+DME,LINE_BENE_PTB_DDCTBL_AMT,str,0,0.0,118,"['0.00', '0.00', '0.00']",True,False
+DME,LINE_BENE_PRMRY_PYR_CD,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+DME,LINE_BENE_PRMRY_PYR_PD_AMT,str,0,0.0,1,"['1', '1', '1']",True,False
+DME,LINE_PRMRY_ALOWD_CHRG_AMT,str,0,0.0,1123,"['0.00', '8.53', '8.53']",False,False
+DME,LINE_SBMTD_CHRG_AMT,str,0,0.0,1123,"['0.00', '8.53', '8.53']",True,False
+DME,LINE_ALOWD_CHRG_AMT,str,0,0.0,1123,"['0.00', '8.53', '8.53']",True,False
+DME,LINE_PRCSG_IND_CD,str,0,0.0,1,"['A', 'A', 'A']",True,False
+DME,LINE_PMT_80_100_CD,str,103828,100.0,0,[],True,False
+DME,LINE_SERVICE_DEDUCTIBLE,str,103828,100.0,0,[],True,False
+DME,LINE_ICD_DGNS_VRSN_CD,str,0,0.0,1,"['0', '0', '0']",True,False
+DME,PRVDR_NUM,str,0,0.0,6622,"['015037', '011806', '011806']",True,True
+DME,PRVDR_NPI,str,0,0.0,6655,"['1336780048', '1063654341', '1063654341']",False,False
+DME,DMERC_LINE_PRCNG_STATE_CD,str,0,0.0,51,"['01', '01', '01']",False,False
+DME,PRVDR_STATE_CD,str,0,0.0,51,"['01', '01', '01']",True,False
+DME,DMERC_LINE_SUPPLR_TYPE_CD,str,0,0.0,9,"['8', '6', '1']",False,False
+DME,HCPCS_3RD_MDFR_CD,str,103828,100.0,0,[],False,False
+DME,HCPCS_4TH_MDFR_CD,str,103828,100.0,0,[],False,False
+DME,DMERC_LINE_SCRN_SVGS_AMT,str,0,0.0,1,"['0', '0', '0']",False,False
+DME,DMERC_LINE_MTUS_CNT,str,11994,11.6,4,"['50', '50', '50']",False,False
+DME,DMERC_LINE_MTUS_CD,str,0,0.0,1,"['0', '0', '0']",False,False
+DME,LINE_HCT_HGB_RSLT_NUM,str,0,0.0,1,"['0.0', '0.0', '0.0']",True,False
+DME,LINE_NDC_CD,str,103828,100.0,0,[],True,False
+HHA,BENE_ID,str,0,0.0,449,"['-10000010254850', '-10000010254850', '-10000010254850']",True,True
+HHA,CLM_ID,str,0,0.0,493,"['-10000930044285', '-10000930044285', '-10000930044285']",True,True
+HHA,NCH_NEAR_LINE_REC_IDENT_CD,str,0,0.0,3,"['W', 'W', 'W']",True,False
+HHA,NCH_CLM_TYPE_CD,str,0,0.0,1,"['10', '10', '10']",True,False
+HHA,CLM_FROM_DT,str,0,0.0,454,"['14-Oct-2021', '14-Oct-2021', '14-Oct-2021']",True,False
+HHA,CLM_THRU_DT,str,0,0.0,457,"['09-Nov-2021', '09-Nov-2021', '09-Nov-2021']",True,False
+HHA,NCH_WKLY_PROC_DT,str,0,0.0,299,"['12-Nov-2021', '12-Nov-2021', '12-Nov-2021']",True,False
+HHA,FI_CLM_PROC_DT,str,6215,100.0,0,[],True,False
+HHA,PRVDR_NUM,str,0,0.0,418,"['017879', '017879', '017879']",True,True
+HHA,CLM_FAC_TYPE_CD,str,0,0.0,1,"['3', '3', '3']",True,False
+HHA,CLM_SRVC_CLSFCTN_TYPE_CD,str,0,0.0,1,"['3', '3', '3']",True,False
+HHA,CLM_FREQ_CD,str,0,0.0,2,"['9', '9', '9']",True,False
+HHA,FI_NUM,str,6215,100.0,0,[],True,False
+HHA,CLM_MDCR_NON_PMT_RSN_CD,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,CLM_PMT_AMT,str,0,0.0,487,"['11853.87', '11853.87', '11853.87']",True,False
+HHA,NCH_PRMRY_PYR_CLM_PD_AMT,str,0,0.0,54,"['0', '0', '0']",True,False
+HHA,NCH_PRMRY_PYR_CD,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,PRVDR_STATE_CD,str,0,0.0,49,"['01', '01', '01']",True,False
+HHA,ORG_NPI_NUM,str,0,0.0,418,"['1225513278', '1225513278', '1225513278']",True,False
+HHA,AT_PHYSN_UPIN,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,AT_PHYSN_NPI,str,493,7.9,402,"['9999873695', '9999873695', '9999873695']",True,True
+HHA,PTNT_DSCHRG_STUS_CD,str,0,0.0,1,"['1', '1', '1']",True,False
+HHA,CLM_PPS_IND_CD,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,CLM_TOT_CHRG_AMT,str,0,0.0,491,"['14817.33', '14817.33', '14817.33']",True,False
+HHA,PRNCPAL_DGNS_CD,str,0,0.0,64,"['Z733', 'Z733', 'Z733']",True,False
+HHA,ICD_DGNS_CD1,str,0,0.0,64,"['Z733', 'Z733', 'Z733']",True,False
+HHA,ICD_DGNS_CD2,str,0,0.0,76,"['M179', 'M179', 'M179']",True,False
+HHA,ICD_DGNS_CD3,str,12,0.2,86,"['T50901A', 'T50901A', 'T50901A']",True,False
+HHA,ICD_DGNS_CD4,str,29,0.5,82,"['Z604', 'Z604', 'Z604']",True,False
+HHA,ICD_DGNS_CD5,str,71,1.1,80,"['E669', 'E669', 'E669']",True,False
+HHA,ICD_DGNS_CD6,str,197,3.2,81,"['Z558', 'Z558', 'Z558']",True,False
+HHA,ICD_DGNS_CD7,str,525,8.4,87,"['R809', 'R809', 'R809']",True,False
+HHA,ICD_DGNS_CD8,str,789,12.7,76,"['N181', 'N181', 'N181']",True,False
+HHA,ICD_DGNS_CD9,str,1176,18.9,78,"['E1121', 'E1121', 'E1121']",True,False
+HHA,ICD_DGNS_CD10,str,1645,26.5,70,"['E785', 'E785', 'E785']",True,False
+HHA,ICD_DGNS_CD11,str,2085,33.5,77,"['E8881', 'E8881', 'E8881']",True,False
+HHA,ICD_DGNS_CD12,str,2707,43.6,65,"['E669', 'E669', 'E669']",True,False
+HHA,ICD_DGNS_CD13,str,3326,53.5,61,"['P292', 'P292', 'P292']",True,False
+HHA,ICD_DGNS_CD14,str,3833,61.7,54,"['D649', 'D649', 'D649']",True,False
+HHA,ICD_DGNS_CD15,str,4208,67.7,46,"['Z653', 'Z653', 'Z653']",True,False
+HHA,ICD_DGNS_CD16,str,4451,71.6,47,"['R7303', 'R7303', 'R7303']",True,False
+HHA,ICD_DGNS_CD17,str,4753,76.5,36,"['Z558', 'Z558', 'Z558']",True,False
+HHA,ICD_DGNS_CD18,str,5025,80.9,31,"['D649', 'D649', 'D649']",True,False
+HHA,ICD_DGNS_CD19,str,5294,85.2,31,"['E669', 'E669', 'E669']",True,False
+HHA,ICD_DGNS_CD20,str,5569,89.6,31,"['Z7689', 'Z7689', 'Z7689']",True,False
+HHA,ICD_DGNS_CD21,str,5820,93.6,24,"['Z5989', 'Z5989', 'Z5989']",True,False
+HHA,ICD_DGNS_CD22,str,5943,95.6,16,"['Z9189', 'Z9189', 'Z9189']",True,False
+HHA,ICD_DGNS_CD23,str,6050,97.3,10,"['A419', 'A419', 'A419']",True,False
+HHA,ICD_DGNS_CD24,str,6097,98.1,7,"['O039', 'O039', 'O039']",True,False
+HHA,ICD_DGNS_CD25,str,6111,98.3,11,"['J329', 'J329', 'J329']",True,False
+HHA,FST_DGNS_E_CD,str,2162,34.8,41,"['W86', 'W86', 'W86']",True,False
+HHA,ICD_DGNS_E_CD1,str,2162,34.8,36,"['W86', 'W86', 'W86']",True,False
+HHA,ICD_DGNS_E_CD2,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD3,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD4,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD5,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD6,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD7,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD8,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD9,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD10,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD11,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,ICD_DGNS_E_CD12,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,CLM_HHA_LUPA_IND_CD,str,6215,100.0,0,[],False,False
+HHA,CLM_HHA_RFRL_CD,str,6215,100.0,0,[],False,False
+HHA,CLM_HHA_TOT_VISIT_CNT,str,0,0.0,31,"['28', '28', '28']",False,False
+HHA,CLM_ADMSN_DT,str,0,0.0,454,"['14-Oct-2021', '14-Oct-2021', '14-Oct-2021']",True,False
+HHA,CLAIM_QUERY_CODE,str,0,0.0,1,"['3', '3', '3']",True,False
+HHA,CLM_LINE_NUM,str,0,0.0,19,"['1', '2', '3']",True,False
+HHA,REV_CNTR,str,0,0.0,9,"['0581', '0583', '0431']",True,False
+HHA,REV_CNTR_DT,str,0,0.0,2216,"['09-Nov-2021', '14-Oct-2021', '20-Oct-2021']",True,False
+HHA,REV_CNTR_1ST_ANSI_CD,str,6215,100.0,0,[],True,False
+HHA,REV_CNTR_APC_HIPPS_CD,str,6215,100.0,0,[],True,False
+HHA,HCPCS_CD,str,493,7.9,21,"['99238', '99497', 'G0129']",True,False
+HHA,HCPCS_1ST_MDFR_CD,str,6215,100.0,0,[],True,False
+HHA,HCPCS_2ND_MDFR_CD,str,6215,100.0,0,[],True,False
+HHA,REV_CNTR_PMT_MTHD_IND_CD,str,0,0.0,1,"['4', '4', '4']",True,False
+HHA,REV_CNTR_UNIT_CNT,str,493,7.9,8,"['1', '2', '1']",True,False
+HHA,REV_CNTR_RATE_AMT,str,493,7.9,1118,"['459.10', '459.10', '459.10']",True,False
+HHA,REV_CNTR_PMT_AMT_AMT,str,0,0.0,1813,"['367.28', '734.56', '367.28']",True,False
+HHA,REV_CNTR_TOT_CHRG_AMT,str,0,0.0,1761,"['459.10', '918.20', '459.10']",True,False
+HHA,REV_CNTR_NCVRD_CHRG_AMT,str,0,0.0,237,"['0.00', '0.00', '0.00']",True,False
+HHA,REV_CNTR_DDCTBL_COINSRNC_CD,str,493,7.9,4,"['3', '3', '3']",True,False
+HHA,REV_CNTR_STUS_IND_CD,str,0,0.0,1,"['4', '4', '4']",True,False
+HHA,REV_CNTR_NDC_QTY,str,6215,100.0,0,[],True,False
+HHA,REV_CNTR_NDC_QTY_QLFR_CD,str,6215,100.0,0,[],True,False
+HHA,RNDRNG_PHYSN_UPIN,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HHA,RNDRNG_PHYSN_NPI,str,493,7.9,402,"['9999873695', '9999873695', '9999873695']",True,False
+SNF,BENE_ID,str,0,0.0,1466,"['-10000010254618', '-10000010254618', '-10000010254618']",True,True
+SNF,CLM_ID,str,0,0.0,1632,"['-10000930038020', '-10000930038020', '-10000930038020']",True,True
+SNF,NCH_NEAR_LINE_REC_IDENT_CD,str,0,0.0,1,"['V', 'V', 'V']",True,False
+SNF,NCH_CLM_TYPE_CD,str,0,0.0,1,"['20', '20', '20']",True,False
+SNF,CLM_FROM_DT,str,0,0.0,1248,"['25-Mar-2015', '25-Mar-2015', '25-Mar-2015']",True,False
+SNF,CLM_THRU_DT,str,0,0.0,1237,"['18-Apr-2015', '18-Apr-2015', '18-Apr-2015']",True,False
+SNF,NCH_WKLY_PROC_DT,str,0,0.0,403,"['24-Apr-2015', '24-Apr-2015', '24-Apr-2015']",True,False
+SNF,FI_CLM_PROC_DT,str,12548,100.0,0,[],True,False
+SNF,CLAIM_QUERY_CODE,str,0,0.0,1,"['3', '3', '3']",True,False
+SNF,PRVDR_NUM,str,0,0.0,1314,"['015037', '015037', '015037']",True,True
+SNF,CLM_FAC_TYPE_CD,str,0,0.0,1,"['2', '2', '2']",True,False
+SNF,CLM_SRVC_CLSFCTN_TYPE_CD,str,0,0.0,1,"['1', '1', '1']",True,False
+SNF,CLM_FREQ_CD,str,0,0.0,2,"['9', '9', '9']",True,False
+SNF,FI_NUM,str,12548,100.0,0,[],True,False
+SNF,CLM_MDCR_NON_PMT_RSN_CD,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,CLM_PMT_AMT,str,0,0.0,1482,"['15675.08', '15675.08', '15675.08']",True,False
+SNF,NCH_PRMRY_PYR_CLM_PD_AMT,str,0,0.0,285,"['0', '0', '0']",True,False
+SNF,NCH_PRMRY_PYR_CD,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,FI_CLM_ACTN_CD,str,12548,100.0,0,[],True,False
+SNF,PRVDR_STATE_CD,str,0,0.0,51,"['01', '01', '01']",True,False
+SNF,ORG_NPI_NUM,str,0,0.0,1314,"['1336780048', '1336780048', '1336780048']",True,False
+SNF,AT_PHYSN_UPIN,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,AT_PHYSN_NPI,str,1632,13.0,1150,"['9999841890', '9999841890', '9999841890']",True,True
+SNF,OP_PHYSN_UPIN,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,OP_PHYSN_NPI,str,1632,13.0,1150,"['9999841890', '9999841890', '9999841890']",True,False
+SNF,OT_PHYSN_UPIN,str,12548,100.0,0,[],True,False
+SNF,OT_PHYSN_NPI,str,12548,100.0,0,[],True,False
+SNF,CLM_MCO_PD_SW,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,PTNT_DSCHRG_STUS_CD,str,0,0.0,1,"['1', '1', '1']",True,False
+SNF,CLM_PPS_IND_CD,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,CLM_TOT_CHRG_AMT,str,0,0.0,1459,"['19593.85', '19593.85', '19593.85']",True,False
+SNF,CLM_ADMSN_DT,str,0,0.0,1248,"['25-Mar-2015', '25-Mar-2015', '25-Mar-2015']",True,False
+SNF,CLM_IP_ADMSN_TYPE_CD,str,0,0.0,1,"['3', '3', '3']",True,False
+SNF,CLM_SRC_IP_ADMSN_CD,str,0,0.0,3,"['1', '1', '1']",True,False
+SNF,NCH_PTNT_STATUS_IND_CD,str,0,0.0,1,"['A', 'A', 'A']",True,False
+SNF,NCH_BENE_IP_DDCTBL_AMT,str,0,0.0,25,"['0.00', '0.00', '0.00']",True,False
+SNF,NCH_BENE_PTA_COINSRNC_LBLTY_AM,str,0,0.0,1198,"['3918.77', '3918.77', '3918.77']",True,False
+SNF,NCH_BENE_BLOOD_DDCTBL_LBLTY_AM,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,NCH_IP_NCVRD_CHRG_AMT,str,0,0.0,232,"['0.00', '0.00', '0.00']",True,False
+SNF,NCH_IP_TOT_DDCTN_AMT,str,0,0.0,1208,"['3918.77', '3918.77', '3918.77']",True,False
+SNF,CLM_PPS_CPTL_FSP_AMT,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,CLM_PPS_CPTL_OUTLIER_AMT,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,CLM_PPS_CPTL_DSPRPRTNT_SHR_AMT,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,CLM_PPS_CPTL_IME_AMT,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,CLM_PPS_CPTL_EXCPTN_AMT,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,CLM_PPS_OLD_CPTL_HLD_HRMLS_AMT,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,CLM_UTLZTN_DAY_CNT,str,0,0.0,91,"['24', '24', '24']",True,False
+SNF,BENE_TOT_COINSRNC_DAYS_CNT,str,0,0.0,71,"['3', '3', '3']",True,False
+SNF,CLM_NON_UTLZTN_DAYS_CNT,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,NCH_BLOOD_PNTS_FRNSHD_QTY,str,0,0.0,1,"['0', '0', '0']",True,False
+SNF,NCH_QLFYD_STAY_FROM_DT,str,12548,100.0,0,[],False,False
+SNF,NCH_QLFYD_STAY_THRU_DT,str,12548,100.0,0,[],False,False
+SNF,NCH_VRFD_NCVRD_STAY_FROM_DT,str,12548,100.0,0,[],True,False
+SNF,NCH_VRFD_NCVRD_STAY_THRU_DT,str,12548,100.0,0,[],True,False
+SNF,NCH_ACTV_OR_CVRD_LVL_CARE_THRU,str,12548,100.0,0,[],True,False
+SNF,NCH_BENE_MDCR_BNFTS_EXHTD_DT_I,str,12548,100.0,0,[],True,False
+SNF,NCH_BENE_DSCHRG_DT,str,0,0.0,403,"['24-Apr-2015', '24-Apr-2015', '24-Apr-2015']",True,False
+SNF,CLM_DRG_CD,str,254,2.0,73,"['551', '551', '551']",True,False
+SNF,ADMTG_DGNS_CD,str,0,0.0,77,"['S134XX', 'S134XX', 'S134XX']",True,False
+SNF,PRNCPAL_DGNS_CD,str,0,0.0,77,"['S134XX', 'S134XX', 'S134XX']",True,False
+SNF,ICD_DGNS_CD1,str,0,0.0,77,"['S134XX', 'S134XX', 'S134XX']",True,False
+SNF,ICD_DGNS_CD2,str,0,0.0,127,"['R4689', 'R4689', 'R4689']",True,False
+SNF,ICD_DGNS_CD3,str,104,0.8,132,"['E781', 'E781', 'E781']",True,False
+SNF,ICD_DGNS_CD4,str,212,1.7,139,"['J329', 'J329', 'J329']",True,False
+SNF,ICD_DGNS_CD5,str,390,3.1,137,"['E119', 'E119', 'E119']",True,False
+SNF,ICD_DGNS_CD6,str,595,4.7,137,"['D649', 'D649', 'D649']",True,False
+SNF,ICD_DGNS_CD7,str,913,7.3,136,"['E849', 'E849', 'E849']",True,False
+SNF,ICD_DGNS_CD8,str,1530,12.2,130,"['B965', 'B965', 'B965']",True,False
+SNF,ICD_DGNS_CD9,str,2453,19.5,127,"['N469', 'N469', 'N469']",True,False
+SNF,ICD_DGNS_CD10,str,3300,26.3,124,"['E849', 'E849', 'E849']",True,False
+SNF,ICD_DGNS_CD11,str,4130,32.9,115,"['P292', 'P292', 'P292']",True,False
+SNF,ICD_DGNS_CD12,str,5092,40.6,102,"['E781', 'E781', 'E781']",True,False
+SNF,ICD_DGNS_CD13,str,6138,48.9,102,"['E8881', 'E8881', 'E8881']",True,False
+SNF,ICD_DGNS_CD14,str,7062,56.3,101,"['E119', 'E119', 'E119']",True,False
+SNF,ICD_DGNS_CD15,str,7859,62.6,91,"['J329', 'J329', 'J329']",True,False
+SNF,ICD_DGNS_CD16,str,8626,68.7,74,"['E669', 'E669', 'E669']",True,False
+SNF,ICD_DGNS_CD17,str,9235,73.6,72,"['R7303', 'R7303', 'R7303']",True,False
+SNF,ICD_DGNS_CD18,str,9843,78.4,70,"['D649', 'D649', 'D649']",True,False
+SNF,ICD_DGNS_CD19,str,10337,82.4,54,"['O039', 'O039', 'O039']",True,False
+SNF,ICD_DGNS_CD20,str,10712,85.4,51,"['R4689', 'R4689', 'R4689']",True,False
+SNF,ICD_DGNS_CD21,str,11161,88.9,49,"['P90', 'P90', 'P90']",True,False
+SNF,ICD_DGNS_CD22,str,11486,91.5,51,"['Z8669', 'Z8669', 'Z8669']",True,False
+SNF,ICD_DGNS_CD23,str,11674,93.0,41,"['Z6841', 'Z6841', 'Z6841']",True,False
+SNF,ICD_DGNS_CD24,str,11866,94.6,32,"['R4689', 'R4689', 'R4689']",True,False
+SNF,ICD_DGNS_CD25,str,12098,96.4,30,"['R569', 'R569', 'R569']",True,False
+SNF,FST_DGNS_E_CD,str,2122,16.9,65,"['X58', 'X58', 'X58']",True,False
+SNF,ICD_DGNS_E_CD1,str,2122,16.9,70,"['V49', 'V49', 'V49']",True,False
+SNF,ICD_DGNS_E_CD2,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD3,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD4,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD5,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD6,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD7,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD8,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD9,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD10,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD11,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_DGNS_E_CD12,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,ICD_PRCDR_CD1,str,0,0.0,2,"['Z000', 'Z000', 'Z000']",True,False
+SNF,PRCDR_DT1,str,0,0.0,1245,"['25-Mar-2015', '25-Mar-2015', '25-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD2,str,0,0.0,4,"['Z048', 'Z048', 'Z048']",True,False
+SNF,PRCDR_DT2,str,0,0.0,1244,"['25-Mar-2015', '25-Mar-2015', '25-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD3,str,0,0.0,3,"['Z5189', 'Z5189', 'Z5189']",True,False
+SNF,PRCDR_DT3,str,0,0.0,1246,"['25-Mar-2015', '25-Mar-2015', '25-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD4,str,0,0.0,2,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT4,str,0,0.0,1245,"['25-Mar-2015', '25-Mar-2015', '25-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD5,str,0,0.0,35,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT5,str,0,0.0,1250,"['26-Mar-2015', '26-Mar-2015', '26-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD6,str,126,1.0,33,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT6,str,126,1.0,1215,"['27-Mar-2015', '27-Mar-2015', '27-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD7,str,280,2.2,34,"['Z5189', 'Z5189', 'Z5189']",True,False
+SNF,PRCDR_DT7,str,280,2.2,1197,"['27-Mar-2015', '27-Mar-2015', '27-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD8,str,579,4.6,33,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT8,str,579,4.6,1185,"['28-Mar-2015', '28-Mar-2015', '28-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD9,str,813,6.5,36,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT9,str,813,6.5,1136,"['29-Mar-2015', '29-Mar-2015', '29-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD10,str,1142,9.1,34,"['5A0211D', '5A0211D', '5A0211D']",True,False
+SNF,PRCDR_DT10,str,1142,9.1,1104,"['29-Mar-2015', '29-Mar-2015', '29-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD11,str,1440,11.5,33,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT11,str,1440,11.5,1071,"['30-Mar-2015', '30-Mar-2015', '30-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD12,str,1731,13.8,33,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT12,str,1731,13.8,1020,"['31-Mar-2015', '31-Mar-2015', '31-Mar-2015']",True,False
+SNF,ICD_PRCDR_CD13,str,2033,16.2,31,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT13,str,2033,16.2,1008,"['01-Apr-2015', '01-Apr-2015', '01-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD14,str,2297,18.3,32,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT14,str,2297,18.3,969,"['02-Apr-2015', '02-Apr-2015', '02-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD15,str,2522,20.1,36,"['Z5189', 'Z5189', 'Z5189']",True,False
+SNF,PRCDR_DT15,str,2522,20.1,943,"['02-Apr-2015', '02-Apr-2015', '02-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD16,str,2819,22.5,32,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT16,str,2819,22.5,921,"['03-Apr-2015', '03-Apr-2015', '03-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD17,str,3102,24.7,32,"['Z5189', 'Z5189', 'Z5189']",True,False
+SNF,PRCDR_DT17,str,3102,24.7,888,"['03-Apr-2015', '03-Apr-2015', '03-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD18,str,3336,26.6,32,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT18,str,3336,26.6,881,"['04-Apr-2015', '04-Apr-2015', '04-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD19,str,3623,28.9,33,"['Z5189', 'Z5189', 'Z5189']",True,False
+SNF,PRCDR_DT19,str,3623,28.9,845,"['04-Apr-2015', '04-Apr-2015', '04-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD20,str,3830,30.5,29,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT20,str,3830,30.5,818,"['05-Apr-2015', '05-Apr-2015', '05-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD21,str,4097,32.7,33,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT21,str,4097,32.7,804,"['06-Apr-2015', '06-Apr-2015', '06-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD22,str,4289,34.2,31,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT22,str,4289,34.2,785,"['07-Apr-2015', '07-Apr-2015', '07-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD23,str,4637,37.0,33,"['Z5189', 'Z5189', 'Z5189']",True,False
+SNF,PRCDR_DT23,str,4637,37.0,743,"['07-Apr-2015', '07-Apr-2015', '07-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD24,str,4887,38.9,27,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT24,str,4887,38.9,720,"['08-Apr-2015', '08-Apr-2015', '08-Apr-2015']",True,False
+SNF,ICD_PRCDR_CD25,str,5044,40.2,24,"['Z008', 'Z008', 'Z008']",True,False
+SNF,PRCDR_DT25,str,5044,40.2,697,"['09-Apr-2015', '09-Apr-2015', '09-Apr-2015']",True,False
+SNF,CLM_LINE_NUM,str,0,0.0,17,"['1', '2', '3']",True,False
+SNF,REV_CNTR,str,8,0.1,8,"['0110', '0120', '0420']",True,False
+SNF,HCPCS_CD,str,9553,76.1,26,"['RUB10', 'ZZZZZ', 'AAA00']",True,False
+SNF,REV_CNTR_UNIT_CNT,str,1863,14.8,102,"['5', '3', '29']",True,False
+SNF,REV_CNTR_RATE_AMT,str,1632,13.0,1517,"['459.10', '459.10', '466.90']",True,False
+SNF,REV_CNTR_TOT_CHRG_AMT,str,0,0.0,3394,"['2295.50', '1377.30', '13540.08']",True,False
+SNF,REV_CNTR_NCVRD_CHRG_AMT,str,0,0.0,848,"['0.00', '0.00', '0.00']",True,False
+SNF,REV_CNTR_DDCTBL_COINSRNC_CD,str,1632,13.0,4,"['3', '3', '3']",True,False
+SNF,REV_CNTR_NDC_QTY,str,12317,98.2,2,"['1', '1', '1']",True,False
+SNF,REV_CNTR_NDC_QTY_QLFR_CD,str,12317,98.2,1,"['UN', 'UN', 'UN']",True,False
+SNF,RNDRNG_PHYSN_UPIN,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+SNF,RNDRNG_PHYSN_NPI,str,1632,13.0,1150,"['9999841890', '9999841890', '9999841890']",True,False
+HOSPICE,BENE_ID,str,0,0.0,1086,"['-10000010254676', '-10000010254676', '-10000010254676']",True,True
+HOSPICE,CLM_ID,str,0,0.0,1086,"['-10000930038434', '-10000930038434', '-10000930038434']",True,True
+HOSPICE,NCH_NEAR_LINE_REC_IDENT_CD,str,0,0.0,1,"['V', 'V', 'V']",True,False
+HOSPICE,NCH_CLM_TYPE_CD,str,0,0.0,1,"['50', '50', '50']",True,False
+HOSPICE,CLM_FROM_DT,str,0,0.0,903,"['27-Oct-2019', '27-Oct-2019', '27-Oct-2019']",True,False
+HOSPICE,CLM_THRU_DT,str,0,0.0,892,"['16-Nov-2019', '16-Nov-2019', '16-Nov-2019']",True,False
+HOSPICE,NCH_WKLY_PROC_DT,str,0,0.0,385,"['22-Nov-2019', '22-Nov-2019', '22-Nov-2019']",True,False
+HOSPICE,FI_CLM_PROC_DT,str,12107,100.0,0,[],True,False
+HOSPICE,PRVDR_NUM,str,0,0.0,820,"['011517', '011517', '011517']",True,True
+HOSPICE,CLM_FAC_TYPE_CD,str,0,0.0,1,"['8', '8', '8']",True,False
+HOSPICE,CLM_SRVC_CLSFCTN_TYPE_CD,str,0,0.0,1,"['1', '1', '1']",True,False
+HOSPICE,CLM_FREQ_CD,str,0,0.0,2,"['9', '9', '9']",True,False
+HOSPICE,FI_NUM,str,12107,100.0,0,[],True,False
+HOSPICE,CLM_MDCR_NON_PMT_RSN_CD,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,CLM_PMT_AMT,str,0,0.0,762,"['11615.01', '11615.01', '11615.01']",True,False
+HOSPICE,NCH_PRMRY_PYR_CLM_PD_AMT,str,0,0.0,171,"['0', '0', '0']",True,False
+HOSPICE,NCH_PRMRY_PYR_CD,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,PRVDR_STATE_CD,str,0,0.0,50,"['01', '01', '01']",True,False
+HOSPICE,ORG_NPI_NUM,str,0,0.0,820,"['1861497935', '1861497935', '1861497935']",True,False
+HOSPICE,AT_PHYSN_UPIN,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,AT_PHYSN_NPI,str,1086,9.0,737,"['9999872291', '9999872291', '9999872291']",True,True
+HOSPICE,PTNT_DSCHRG_STUS_CD,str,0,0.0,1,"['1', '1', '1']",True,False
+HOSPICE,CLM_TOT_CHRG_AMT,str,0,0.0,762,"['11615.01', '11615.01', '11615.01']",True,False
+HOSPICE,NCH_PTNT_STATUS_IND_CD,str,0,0.0,1,"['A', 'A', 'A']",True,False
+HOSPICE,CLM_UTLZTN_DAY_CNT,str,0,0.0,107,"['20', '20', '20']",True,False
+HOSPICE,NCH_BENE_DSCHRG_DT,str,0,0.0,385,"['22-Nov-2019', '22-Nov-2019', '22-Nov-2019']",True,False
+HOSPICE,PRNCPAL_DGNS_CD,str,0,0.0,20,"['C188', 'C188', 'C188']",True,False
+HOSPICE,ICD_DGNS_CD1,str,0,0.0,94,"['Z733', 'Z733', 'Z733']",True,False
+HOSPICE,ICD_DGNS_CD2,str,0,0.0,98,"['Z608', 'Z608', 'Z608']",True,False
+HOSPICE,ICD_DGNS_CD3,str,0,0.0,107,"['P292', 'P292', 'P292']",True,False
+HOSPICE,ICD_DGNS_CD4,str,22,0.2,103,"['E8881', 'E8881', 'E8881']",True,False
+HOSPICE,ICD_DGNS_CD5,str,84,0.7,112,"['K621', 'K621', 'K621']",True,False
+HOSPICE,ICD_DGNS_CD6,str,198,1.6,110,"['K635', 'K635', 'K635']",True,False
+HOSPICE,ICD_DGNS_CD7,str,391,3.2,107,"['R7303', 'R7303', 'R7303']",True,False
+HOSPICE,ICD_DGNS_CD8,str,747,6.2,110,"['D649', 'D649', 'D649']",True,False
+HOSPICE,ICD_DGNS_CD9,str,1120,9.3,117,"['E669', 'E669', 'E669']",True,False
+HOSPICE,ICD_DGNS_CD10,str,1672,13.8,108,"['R4689', 'R4689', 'R4689']",True,False
+HOSPICE,ICD_DGNS_CD11,str,2415,19.9,103,"['I259', 'I259', 'I259']",True,False
+HOSPICE,ICD_DGNS_CD12,str,3093,25.5,99,"['E781', 'E781', 'E781']",True,False
+HOSPICE,ICD_DGNS_CD13,str,3938,32.5,97,"['E8881', 'E8881', 'E8881']",True,False
+HOSPICE,ICD_DGNS_CD14,str,4639,38.3,90,"['P292', 'P292', 'P292']",True,False
+HOSPICE,ICD_DGNS_CD15,str,5613,46.4,81,"['E119', 'E119', 'E119']",True,False
+HOSPICE,ICD_DGNS_CD16,str,6478,53.5,73,"['E1143', 'E1143', 'E1143']",True,False
+HOSPICE,ICD_DGNS_CD17,str,7207,59.5,72,"['R7303', 'R7303', 'R7303']",True,False
+HOSPICE,ICD_DGNS_CD18,str,8114,67.0,62,"['D649', 'D649', 'D649']",True,False
+HOSPICE,ICD_DGNS_CD19,str,9006,74.4,55,"['J329', 'J329', 'J329']",True,False
+HOSPICE,ICD_DGNS_CD20,str,9669,79.9,54,"['Z591', 'Z591', 'Z591']",True,False
+HOSPICE,ICD_DGNS_CD21,str,10178,84.1,45,"['R7303', 'R7303', 'R7303']",True,False
+HOSPICE,ICD_DGNS_CD22,str,10660,88.0,43,"['Z653', 'Z653', 'Z653']",True,False
+HOSPICE,ICD_DGNS_CD23,str,11097,91.7,30,"['E669', 'E669', 'E669']",True,False
+HOSPICE,ICD_DGNS_CD24,str,11406,94.2,30,"['P292', 'P292', 'P292']",True,False
+HOSPICE,ICD_DGNS_CD25,str,11546,95.4,27,"['O039', 'O039', 'O039']",True,False
+HOSPICE,FST_DGNS_E_CD,str,374,3.1,57,"['Y92', 'Y92', 'Y92']",True,False
+HOSPICE,ICD_DGNS_E_CD1,str,374,3.1,47,"['X58', 'X58', 'X58']",True,False
+HOSPICE,ICD_DGNS_E_CD2,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD3,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD4,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD5,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD6,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD7,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD8,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD9,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD10,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD11,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,ICD_DGNS_E_CD12,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,CLM_HOSPC_START_DT_ID,str,0,0.0,903,"['27-Oct-2019', '27-Oct-2019', '27-Oct-2019']",False,False
+HOSPICE,BENE_HOSPC_PRD_CNT,str,12107,100.0,0,[],False,False
+HOSPICE,CLAIM_QUERY_CODE,str,0,0.0,1,"['3', '3', '3']",True,False
+HOSPICE,CLM_LINE_NUM,str,0,0.0,18,"['1', '2', '3']",True,False
+HOSPICE,REV_CNTR,str,0,0.0,15,"['0550', '0657', '0657']",True,False
+HOSPICE,REV_CNTR_DT,str,0,0.0,903,"['27-Oct-2019', '27-Oct-2019', '27-Oct-2019']",True,False
+HOSPICE,HCPCS_CD,str,2161,17.8,12,"['99238', '99497', 'G0155']",True,False
+HOSPICE,HCPCS_1ST_MDFR_CD,str,12107,100.0,0,[],True,False
+HOSPICE,HCPCS_2ND_MDFR_CD,str,12107,100.0,0,[],True,False
+HOSPICE,REV_CNTR_UNIT_CNT,str,1086,9.0,30,"['2', '1', '1']",True,False
+HOSPICE,REV_CNTR_RATE_AMT,str,1086,9.0,50,"['459.10', '459.10', '459.10']",True,False
+HOSPICE,REV_CNTR_PRVDR_PMT_AMT,str,0,0.0,1641,"['734.56', '367.28', '367.28']",True,False
+HOSPICE,REV_CNTR_BENE_PMT_AMT,str,0,0.0,1,"['0', '0', '0']",True,False
+HOSPICE,REV_CNTR_PMT_AMT_AMT,str,0,0.0,1641,"['734.56', '367.28', '367.28']",True,False
+HOSPICE,REV_CNTR_TOT_CHRG_AMT,str,0,0.0,1183,"['918.20', '459.10', '459.10']",True,False
+HOSPICE,REV_CNTR_NCVRD_CHRG_AMT,str,0,0.0,520,"['0.00', '0.00', '0.00']",True,False
+HOSPICE,REV_CNTR_DDCTBL_COINSRNC_CD,str,1086,9.0,4,"['3', '3', '3']",True,False
+HOSPICE,REV_CNTR_NDC_QTY,str,12107,100.0,0,[],True,False
+HOSPICE,REV_CNTR_NDC_QTY_QLFR_CD,str,12107,100.0,0,[],True,False
+HOSPICE,RNDRNG_PHYSN_UPIN,str,0,0.0,1,"[' ', ' ', ' ']",True,False
+HOSPICE,RNDRNG_PHYSN_NPI,str,1086,9.0,737,"['9999872291', '9999872291', '9999872291']",True,False

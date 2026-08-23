@@ -1,0 +1,52 @@
+{
+  "PDE": {
+    "decision": "SEPARATE",
+    "reason": "Many-to-many: PDE has 69.6 rows/bene (mean), master has ~multiple rows/bene. BENE_ID join would multiply rows. Master=1,754,162 rows; join would exceed this. NO AGGREGATION ALLOWED.",
+    "bene_col": "BENE_ID",
+    "overlap": 7401,
+    "overlap_pct": 100.0,
+    "rows": 515520,
+    "rows_per_bene": 69.6,
+    "common_cols_count": 1
+  },
+  "DME": {
+    "decision": "SEPARATE",
+    "reason": "Many-to-many: DME has 18.6 rows/bene (mean), master has ~multiple rows/bene. BENE_ID join would multiply rows. Master=1,754,162 rows; join would exceed this. NO AGGREGATION ALLOWED.",
+    "bene_col": "BENE_ID",
+    "overlap": 5570,
+    "overlap_pct": 99.9,
+    "rows": 103828,
+    "rows_per_bene": 18.6,
+    "common_cols_count": 78
+  },
+  "HHA": {
+    "decision": "SEPARATE",
+    "reason": "Many-to-many: HHA has 13.8 rows/bene (mean), master has ~multiple rows/bene. BENE_ID join would multiply rows. Master=1,754,162 rows; join would exceed this. NO AGGREGATION ALLOWED.",
+    "bene_col": "BENE_ID",
+    "overlap": 449,
+    "overlap_pct": 100.0,
+    "rows": 6215,
+    "rows_per_bene": 13.8,
+    "common_cols_count": 85
+  },
+  "SNF": {
+    "decision": "SEPARATE",
+    "reason": "Many-to-many: SNF has 8.6 rows/bene (mean), master has ~multiple rows/bene. BENE_ID join would multiply rows. Master=1,754,162 rows; join would exceed this. NO AGGREGATION ALLOWED.",
+    "bene_col": "BENE_ID",
+    "overlap": 1461,
+    "overlap_pct": 99.7,
+    "rows": 12548,
+    "rows_per_bene": 8.6,
+    "common_cols_count": 158
+  },
+  "HOSPICE": {
+    "decision": "SEPARATE",
+    "reason": "Many-to-many: HOSPICE has 11.1 rows/bene (mean), master has ~multiple rows/bene. BENE_ID join would multiply rows. Master=1,754,162 rows; join would exceed this. NO AGGREGATION ALLOWED.",
+    "bene_col": "BENE_ID",
+    "overlap": 1081,
+    "overlap_pct": 99.5,
+    "rows": 12107,
+    "rows_per_bene": 11.1,
+    "common_cols_count": 84
+  }
+}
