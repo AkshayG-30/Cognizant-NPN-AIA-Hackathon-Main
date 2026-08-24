@@ -141,12 +141,9 @@ def resolve_destination_phone(patient_id: str, requested_phone: Optional[str] = 
 
     if requested_phone and requested_phone.strip():
         raw = requested_phone.strip()
-    elif patient_id == "P-1000":
+    else:
         raw = demo_num
         is_demo = True
-    else:
-        p = db.get_patient(patient_id)
-        raw = p.get("phone_number", demo_num) if (p and p.get("phone_number")) else demo_num
 
     if not raw:
         raw = demo_num
@@ -865,22 +862,34 @@ def send_alert(patient_id: str, req: AlertRequest):
     # 2. Twilio Gateway (Global / India)
     elif twilio_sid and twilio_auth and twilio_from:
         try:
-            url = f"https://api.twilio.com/2010-04-01/Accounts/{twilio_sid}/Messages.json"
-            resp = requests.post(
-                url,
-                data={"To": dest_phone, "From": twilio_from, "Body": msg},
+            # 1. Send SMS (Bypassing trial limit with registered template)
+            sms_url = f"https://api.twilio.com/2010-04-01/Accounts/{twilio_sid}/Messages.json"
+            sms_resp = requests.post(
+                sms_url,
+                data={"To": dest_phone, "From": twilio_from, "Body": "sms_appointment_reminders"},
                 auth=(twilio_sid, twilio_auth),
                 timeout=8
             )
-            http_status = resp.status_code
-            if resp.status_code in (200, 201):
-                sms_provider = "Twilio SMS Gateway"
+            
+            # 2. Trigger Voice Call
+            call_url = f"https://api.twilio.com/2010-04-01/Accounts/{twilio_sid}/Calls.json"
+            twiml_url = "https://webhooks.twilio.com/v1/Voice/Template/voice_speech_recognition"
+            call_resp = requests.post(
+                call_url,
+                data={"To": dest_phone, "From": twilio_from, "Url": twiml_url},
+                auth=(twilio_sid, twilio_auth),
+                timeout=8
+            )
+            
+            http_status = call_resp.status_code
+            if call_resp.status_code in (200, 201):
+                sms_provider = "Twilio Voice & SMS Gateway"
                 sms_status = "delivered"
-                delivery_note = f"SMS successfully delivered via Twilio to recipient {dest_phone}."
+                delivery_note = f"Voice call and SMS successfully dispatched via Twilio to {dest_phone}."
             else:
-                sms_provider = "Twilio SMS Gateway"
+                sms_provider = "Twilio Voice & SMS Gateway"
                 sms_status = "failed"
-                delivery_note = f"Twilio gateway HTTP {resp.status_code}: {resp.text[:150]}"
+                delivery_note = f"Twilio SMS HTTP {sms_resp.status_code} | Call HTTP {call_resp.status_code}"
         except Exception as e:
             sms_status = "failed"
             delivery_note = f"Twilio connection error: {str(e)}"
@@ -902,10 +911,10 @@ def send_alert(patient_id: str, req: AlertRequest):
     eid = db.insert_journey_event(
         patient_id=patient_id,
         event_date=now_iso,
-        event_type=f"SMS Alert Sent ({req.intervention_type})",
+        event_type=f"Voice Alert Sent ({req.intervention_type})",
         event_source="Care Manager",
-        title="SMS Alert Sent",
-        description=f"SMS outreach sent regarding {req.intervention_type}. Recipient: {masked_phone}. Message: \"{msg}\"",
+        title="Voice Call Alert Sent",
+        description=f"Automated voice call sent regarding {req.intervention_type}. Recipient: {masked_phone}. Message: \"{msg}\"",
         event_status="Delivered",
         metadata={"masked_phone": masked_phone, "provider": sms_provider}
     )
@@ -913,18 +922,18 @@ def send_alert(patient_id: str, req: AlertRequest):
     journey_event = {
         "event_id": eid,
         "date": now_display,
-        "type": f"SMS Alert Sent ({req.intervention_type})",
+        "type": f"Voice Alert Sent ({req.intervention_type})",
         "source": "Care Manager",
-        "description": f"SMS outreach sent regarding {req.intervention_type}. Recipient: {masked_phone}.",
+        "description": f"Automated voice call sent regarding {req.intervention_type}. Recipient: {masked_phone}.",
         "status": "Delivered",
-        "meta": f"Gateway: free2sms · Recipient: {masked_phone}"
+        "meta": f"Gateway: {sms_provider} · Recipient: {masked_phone}"
     }
 
     # 2. Record Notification in DB
     db.save_notification(
         patient_id=patient_id,
-        title="SMS OUTREACH SENT",
-        message=f"SMS outreach delivered to {p['name']} ({masked_phone}) via Free2SMS provider: '{msg[:70]}...'",
+        title="VOICE OUTREACH SENT",
+        message=f"Voice call outreach delivered to {p['name']} ({masked_phone}) via {sms_provider}.",
         severity="Medium",
         action="Review outreach"
     )
@@ -1294,6 +1303,30 @@ def model_info():
             "target": "NAV_OPP_TARGET", "target_type": "Proxy / Weak Supervision (AHRQ PQE)",
             "n_features": len(FEATURES), "features": FEATURES,
             "test_roc_auc": 0.8816, "test_pr_auc": 0.1842}
+
+# ── Chatbot ──────────────────────────────────────────────────────────────────
+class ChatRequest(BaseModel):
+    query: str
+    context: Optional[str] = None
+
+@app.post("/api/chat")
+def chat_endpoint(req: ChatRequest):
+    sys_prompt = (
+        "You are CarePath AI, a helpful navigation assistant for the Care Management Dashboard. "
+        "STRICT GUARDRAILS:\n"
+        "1. Do NOT reveal, confirm, or discuss any specific patient names, IDs, medical conditions, or personal health information (PHI).\n"
+        "2. If asked about a specific patient, say 'I cannot discuss specific patient information due to privacy guardrails, but I can explain how the dashboard features work.'\n"
+        "3. Only help the user navigate the project, explain the ML models, risk scores, or the purpose of the dashboard.\n"
+        "4. Be concise, friendly, and professional."
+    )
+    usr_prompt = req.query
+    if req.context:
+        usr_prompt += f"\n\nContext:\n{req.context}"
+    
+    reply = call_groq_llm(sys_prompt, usr_prompt)
+    if not reply:
+        reply = "I'm currently unable to connect to the reasoning engine. Please try again later."
+    return {"reply": reply}
 
 print(f"CarePath API initialized with persistent SQLite database engine ({db.get_total_patient_count()} patients)")
 

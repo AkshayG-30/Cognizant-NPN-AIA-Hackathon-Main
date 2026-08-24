@@ -48,7 +48,7 @@ export const shapFactors = [
 
 export const navGroups = {
   hospital: [
-    { label: 'Dashboard', href: '/hospital', icon: 'LayoutDashboard' }, { label: 'Patients', href: '/hospital/patients', icon: 'Users' }, { label: 'Care Journey', href: '/hospital/care-journey', icon: 'GitBranch' }, { label: 'Appointments', href: '/hospital/appointments', icon: 'CalendarDays' }, { label: 'Alerts', href: '/hospital/alerts', icon: 'Bell' }, { label: 'Reports', href: '/hospital/reports', icon: 'FileText' },
+    { label: 'Dashboard', href: '/hospital', icon: 'LayoutDashboard' }, { label: 'Patients', href: '/hospital/patients', icon: 'Users' }, { label: 'Alerts', href: '/hospital/alerts', icon: 'Bell' },
   ],
   insurance: [
     { label: 'Dashboard', href: '/insurance', icon: 'LayoutDashboard' }, { label: 'Members', href: '/insurance/members', icon: 'Users' }, { label: 'Intervention Engine', href: '/insurance/interventions', icon: 'Target' }, { label: 'Trends', href: '/insurance/trends', icon: 'TrendingUp' }, { label: 'Impact / ROI', href: '/insurance/impact', icon: 'BarChart3' },

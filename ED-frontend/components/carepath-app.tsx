@@ -804,7 +804,7 @@ function AlertWorkflow({
               ) : (
                 <>
                   <Send className="size-4" />
-                  SEND SMS
+                  SEND VOICE CALL / SMS
                 </>
               )}
             </Button>

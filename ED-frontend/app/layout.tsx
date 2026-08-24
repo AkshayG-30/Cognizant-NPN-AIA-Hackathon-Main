@@ -14,11 +14,14 @@ export const viewport: Viewport = {
   userScalable: true,
 }
 
+import { Chatbot } from '@/components/Chatbot'
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className="light bg-background">
       <body className="antialiased">
         {children}
+        <Chatbot />
         {process.env.NODE_ENV === 'production' && <Analytics />}
       </body>
     </html>
