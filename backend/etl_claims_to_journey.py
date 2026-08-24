@@ -233,26 +233,27 @@ def run_etl():
     bene_to_pid = {}  # BENE_ID -> patient_id mapping
 
     for i, row in patients_df.iterrows():
+        idx = int(i)  # type: ignore[arg-type]
         bene = str(row["BENE_ID"])
-        pid = f"P-{1000 + i}"
-        name = f"{FIRST[i % len(FIRST)]} {LAST[i % len(LAST)]}"
+        pid = f"P-{1000 + idx}"
+        name = f"{FIRST[idx % len(FIRST)]} {LAST[idx % len(LAST)]}"
         score = float(row["ensemble"])
         age = _safe_int(row.get("AGE_AT_END_REF_YR"), 65)
         conds = _patient_conditions(row)
-        bice = float(row.get("bice_boxerman", 0.5))
+        bice = float(row.get("bice_boxerman") or 0.5)
         cont = _continuity_label(bice)
         sex = str(row.get("SEX_IDENT_CD", ""))
         race = str(row.get("BENE_RACE_CD", ""))
 
-        if i == 0:
+        if idx == 0:
             p_phone = demo_phone
             p_masked = demo_masked
             is_demo = True
             # Force Maya Thompson identity for P-1000
             name = "Maya Thompson"
         else:
-            p_phone = f"+155501{i:04d}"
-            p_masked = f"******{i:04d}"
+            p_phone = f"+155501{idx:04d}"
+            p_masked = f"******{idx:04d}"
             is_demo = False
 
         bene_to_pid[bene] = pid
@@ -300,12 +301,12 @@ def run_etl():
         # Filter to only our scored patients
         master['BENE_ID'] = master['BENE_ID'].astype(str)
         scored_benes = set(bene_to_pid.keys())
-        relevant = master[master['BENE_ID'].isin(scored_benes)]
+        relevant = master[master['BENE_ID'].isin(list(scored_benes))]
         log.info(f"  {len(relevant):,} claims belong to scored patients")
         del master  # free memory
 
         # Deduplicate to claim-level (not line-level) for journey events
-        claims = relevant.drop_duplicates(subset=['CLM_ID'], keep='first')
+        claims = relevant.drop_duplicates(subset=['CLM_ID'], keep='first')  # type: ignore[call-overload]
         log.info(f"  {len(claims):,} unique claims (deduplicated from line items)")
         del relevant
 
@@ -326,10 +327,10 @@ def run_etl():
 
             # Parse date
             clm_date = row.get('CLM_DATE')
-            if pd.isna(clm_date):
+            if clm_date is None or pd.isna(clm_date):  # type: ignore[arg-type]
                 event_date = str(row.get('CLM_FROM_DT', ''))
             else:
-                event_date = clm_date.isoformat()
+                event_date = pd.Timestamp(clm_date).isoformat()
 
             # Classify
             event_type, title, description = classify_claim_event(row)

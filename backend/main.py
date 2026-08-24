@@ -116,7 +116,7 @@ def rescore_features_with_model(features: dict) -> float:
             cols = pipeline.get("feat_cols", FEATURES)
             scaled_X = scaler.transform(df_row[cols])
         else:
-            scaled_X = pipeline.transform(df_row)
+            scaled_X = pipeline.transform(df_row)  # type: ignore[union-attr]
         
         p_lr = float(lr_model.predict_proba(scaled_X)[0][1])
         p_rf = float(rf_model.predict_proba(scaled_X)[0][1])
@@ -227,7 +227,7 @@ def compute_explanation(patient_features: dict) -> list:
     top_features = feat_imp.head(15)
     factors = []
     for _, row in top_features.iterrows():
-        feat = row["feature"]
+        feat = str(row["feature"])
         imp = float(row["importance"])
         val = patient_features.get(feat, 0)
         contribution = round(imp * (1 if val > 0 else -0.3), 4)
@@ -277,7 +277,7 @@ def list_patients(risk: Optional[str] = None, q: Optional[str] = None,
     List patients sorted by risk DESC from the full database.
     If top1000_only is True, selects top 1000 by risk.
     """
-    rows, total_filtered = db.list_patients_by_risk(limit=limit, offset=offset, risk_filter=risk, query=q)
+    rows, total_filtered = db.list_patients_by_risk(limit=limit, offset=offset, risk_filter=risk or "", query=q or "")
     total_dataset = db.get_total_patient_count()
     cutoff_risk = db.get_top_n_cutoff(1000)
 
@@ -313,7 +313,7 @@ def get_explanation(patient_id: str):
         "note": "Model-derived feature contributions from current longitudinal snapshot."
     }
 
-def calculate_event_financials(event_type: str, description: str = "", conditions: str = "", metadata: dict = None):
+def calculate_event_financials(event_type: str, description: str = "", conditions: str = "", metadata: Optional[dict] = None):
     """
     Computes (cost_usd, necessity_status, necessity_reason) for a care journey event.
     """
@@ -1078,7 +1078,7 @@ def insurance_dashboard():
 # ── Members (Insurance) ─────────────────────────────────────────────────────
 @app.get("/api/members")
 def list_members(q: Optional[str] = None, risk: Optional[str] = None, limit: int = 200, offset: int = 0):
-    rows, total = db.list_patients_by_risk(limit=limit, offset=offset, risk_filter=risk, query=q)
+    rows, total = db.list_patients_by_risk(limit=limit, offset=offset, risk_filter=risk or "", query=q or "")
     members = []
     for r in rows:
         pid = r["patient_id"]

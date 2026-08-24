@@ -15,4 +15,5 @@ node_modules/
 .next/
 build/
 dist/
+.vscode/
 .DS_Store
