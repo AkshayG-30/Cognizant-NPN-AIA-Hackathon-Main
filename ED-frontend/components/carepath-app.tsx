@@ -3,8 +3,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Area, AreaChart, Bar, BarChart, CartesianGrid, Cell, Pie, PieChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts'
-import { Activity, AlertCircle, AlertTriangle, ArrowDownRight, ArrowUpRight, BarChart3, Bell, CalendarDays, Check, ChevronDown, CircleHelp, Clock3, FileText, GitBranch, LayoutDashboard, Loader2, Menu, MessageSquare, MoreHorizontal, Phone, Plus, Search, Send, Settings, ShieldCheck, Target, TrendingUp, Upload, Users, X } from 'lucide-react'
-import { navItems, type Workspace } from '@/lib/carepath-data'
+import {
+  Activity, AlertCircle, AlertTriangle, ArrowDownRight, ArrowLeft, ArrowRight, ArrowUpRight,
+  BarChart3, Bell, Building2, CalendarDays, Check, CheckCheck, ChevronDown, ChevronLeft, ChevronRight,
+  CircleHelp, Clock3, Command, ExternalLink, FileText, GitBranch, LayoutDashboard, Loader2,
+  Menu, MessageSquare, MoreHorizontal, Navigation, PanelLeft, PanelLeftClose, Phone, Plus,
+  Search, Send, Settings, Shield, ShieldCheck, Sparkles, Target, TrendingUp, Upload, Users, X
+} from 'lucide-react'
+import { navItems, patients as staticPatients, members as staticMembers, type Workspace } from '@/lib/carepath-data'
 import { api, type Patient, type Member, type JourneyEvent, type ShapFactor, type Notification, type RiskLevel, type DashboardStats, type InsuranceDashboardStats, type TrendPoint, type UtilPoint } from '@/lib/api'
 
 /* ── Generic fetch hook ──────────────────────────────────────────────────── */
@@ -42,24 +48,683 @@ function useApi<T>(fn: () => Promise<T>, deps: unknown[] = []) {
   return { data, loading, error, reload: () => load(true) };
 }
 
-function LoadingState() { return <div className="flex items-center justify-center gap-2 py-20 text-slate-500"><Loader2 className="size-5 animate-spin" /><span className="text-sm">Loading…</span></div> }
+function LoadingState() { return <div className="flex items-center justify-center gap-2 py-20 text-slate-500"><Loader2 className="size-5 animate-spin text-teal-700" /><span className="text-sm">Loading…</span></div> }
 function ErrorState({ message, onRetry }: { message: string; onRetry?: () => void }) { return <div className="flex flex-col items-center gap-3 py-20 text-center"><AlertTriangle className="size-6 text-rose-400" /><p className="text-sm text-slate-600">{message}</p>{onRetry && <button onClick={onRetry} className="rounded-lg bg-teal-700 px-3 py-1.5 text-xs font-semibold text-white hover:bg-teal-800">Retry</button>}</div> }
 
 const icons = { LayoutDashboard, Users, GitBranch, CalendarDays, Bell, FileText, Target, TrendingUp, BarChart3 }
 
 function RiskBadge({ level, score }: { level: RiskLevel; score?: number }) {
   const styles = level === 'High' ? 'border-rose-200 bg-rose-50 text-rose-700' : level === 'Medium' ? 'border-amber-200 bg-amber-50 text-amber-700' : 'border-teal-200 bg-teal-50 text-teal-700'
-  return <span className={`inline-flex items-center gap-1.5 border px-2 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] ${styles}`}><span className="size-1.5 rounded-full bg-current" />{level}{score !== undefined && <span className="font-mono text-[10px]">{Math.round(score * 100)}%</span>}</span>
+  return <span className={`inline-flex items-center gap-1.5 border px-2 py-0.5 text-[11px] font-semibold uppercase tracking-[0.12em] rounded-md ${styles}`}><span className="size-1.5 rounded-full bg-current" />{level}{score !== undefined && <span className="font-mono text-[10px]">({Math.round(score * 100)}%)</span>}</span>
 }
 
-function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) { return <section className={`border-y border-slate-200 bg-white ${className}`}>{children}</section> }
+function Card({ children, className = '' }: { children: React.ReactNode; className?: string }) { return <section className={`border border-slate-200 bg-white rounded-xl shadow-sm ${className}`}>{children}</section> }
 function SectionTitle({ eyebrow, title, action }: { eyebrow?: string; title: string; action?: React.ReactNode }) { return <div className="flex items-end justify-between gap-4"><div>{eyebrow && <p className="mb-1 text-[10px] font-bold uppercase tracking-[0.2em] text-teal-700">{eyebrow}</p>}<h2 className="text-lg font-semibold tracking-tight text-slate-800">{title}</h2></div>{action}</div> }
 function Kpi({ label, value, detail, tone = 'cyan', icon: Icon = Activity }: { label: string; value: string; detail: string; tone?: string; icon?: React.ElementType }) { return <div className="border-l border-slate-200 px-4 py-2 first:border-l-0"><div className="flex items-center gap-2"><p className="text-[10px] font-semibold uppercase tracking-[0.14em] text-slate-500">{label}</p><Icon className={`size-3.5 ${tone === 'rose' ? 'text-rose-600' : tone === 'amber' ? 'text-amber-600' : 'text-teal-700'}`} /></div><p className="mt-2 text-2xl font-semibold tracking-tight text-slate-950">{value}</p><p className={`mt-1 text-xs ${tone === 'rose' ? 'text-rose-700' : tone === 'amber' ? 'text-amber-700' : 'text-teal-700'}`}>{detail}</p></div> }
-function Button({ children, onClick, variant = 'primary', className = '', type = 'button' }: { children: React.ReactNode; onClick?: () => void; variant?: 'primary' | 'secondary' | 'ghost' | 'danger'; className?: string; type?: 'button' | 'submit' }) { const styles = { primary: 'bg-teal-700 text-white hover:bg-teal-800', secondary: 'border border-slate-300 bg-white text-slate-800 hover:bg-slate-100', ghost: 'text-slate-700 hover:bg-slate-100 hover:text-slate-950', danger: 'border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100' }; return <button type={type} onClick={onClick} className={`inline-flex min-h-9 items-center justify-center gap-2 rounded-lg px-3.5 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 ${styles[variant]} ${className}`}>{children}</button> }
+function Button({ children, onClick, variant = 'primary', className = '', type = 'button', disabled = false }: { children: React.ReactNode; onClick?: () => void; variant?: 'primary' | 'secondary' | 'ghost' | 'danger'; className?: string; type?: 'button' | 'submit'; disabled?: boolean }) { const styles = { primary: 'bg-teal-700 text-white hover:bg-teal-800 disabled:opacity-50', secondary: 'border border-slate-300 bg-white text-slate-800 hover:bg-slate-100 disabled:opacity-50', ghost: 'text-slate-700 hover:bg-slate-100 hover:text-slate-950 disabled:opacity-50', danger: 'border border-rose-300 bg-rose-50 text-rose-700 hover:bg-rose-100 disabled:opacity-50' }; return <button type={type} disabled={disabled} onClick={onClick} className={`inline-flex min-h-9 items-center justify-center gap-2 rounded-lg px-3.5 text-xs font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 ${styles[variant]} ${className}`}>{children}</button> }
 
-function Sidebar({ workspace, setWorkspace }: { workspace: Workspace; setWorkspace: (value: Workspace) => void }) { const router = useRouter(); const pathname = usePathname(); const [open, setOpen] = useState(false); return <><aside className={`fixed inset-y-0 left-0 z-40 w-64 border-r border-slate-200 bg-slate-50 p-4 transition-transform lg:static lg:translate-x-0 ${open ? 'translate-x-0' : '-translate-x-full'}`}><div className="flex items-center gap-3 px-2 py-3"><div className="grid size-9 place-items-center rounded-xl bg-teal-700 text-slate-950"><Activity className="size-5" /></div><div><p className="text-sm font-bold tracking-tight text-slate-950">CarePath</p><p className="text-[10px] uppercase tracking-[0.16em] text-slate-500">Navigation intelligence</p></div></div><div className="my-5 rounded-xl border border-slate-300/80 bg-white/80 p-1"><button onClick={() => setWorkspace(workspace === 'hospital' ? 'insurance' : 'hospital')} className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-left hover:bg-slate-100"><span><span className="block text-[10px] uppercase tracking-[0.14em] text-slate-500">Workspace</span><span className="text-xs font-semibold text-slate-800">{workspace === 'hospital' ? 'Hospital / Care Mgmt' : 'Insurance / Population'}</span></span><ChevronDown className="size-4 text-slate-500" /></button></div><nav className="flex flex-col gap-1">{navItems(workspace).map((item) => { const Icon = icons[item.icon as keyof typeof icons]; const active = pathname === item.href || (item.href !== '/hospital' && item.href !== '/insurance' && pathname.startsWith(item.href)); return <button key={item.href} onClick={() => { router.push(item.href); setOpen(false) }} className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition ${active ? 'bg-teal-700/10 text-teal-800 ring-1 ring-cyan-400/20' : 'text-slate-600 hover:bg-slate-100/80 hover:text-slate-800'}`}><Icon className="size-4" />{item.label}{item.label === 'Alerts' && <span className="ml-auto rounded-full bg-rose-400 px-1.5 py-0.5 text-[10px] font-bold text-slate-950">4</span>}</button> })}</nav><div className="mt-auto hidden border-t border-slate-200 pt-4 lg:block"><button className="flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-slate-500 hover:bg-slate-100 hover:text-slate-200"><Settings className="size-4" />Settings</button><div className="mt-4 flex items-center gap-3 px-3"><div className="grid size-8 place-items-center rounded-full bg-slate-300 text-xs font-semibold text-teal-800">JD</div><div><p className="text-xs font-medium text-slate-200">Jordan Davis</p><p className="text-[10px] text-slate-500">Care manager</p></div></div></div></aside>{open && <button aria-label="Close navigation" className="fixed inset-0 z-30 bg-slate-100/60 lg:hidden" onClick={() => setOpen(false)} />}</> }
+/* ── Interactive Breadcrumbs Component ───────────────────────────────────── */
+function Breadcrumbs({ items }: { items?: Array<{ label: string; href?: string }> }) {
+  const router = useRouter();
+  const pathname = usePathname();
 
-function Header({ workspace, title }: { workspace: Workspace; title: string }) { const router = useRouter(); return <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between border-b border-slate-200/90 bg-white/95 px-4 backdrop-blur lg:px-8"><div className="flex items-center gap-3"><button aria-label="Open navigation" className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden" onClick={() => window.dispatchEvent(new CustomEvent('carepath-menu'))}><Menu className="size-5" /></button><div><p className="hidden text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500 sm:block">{workspace === 'hospital' ? 'Hospital / Care Management' : 'Insurance / Population Analytics'}</p><h1 className="text-sm font-semibold text-slate-800 lg:text-base">{title}</h1></div></div><div className="flex items-center gap-2"><div className="hidden items-center gap-2 rounded-lg border border-slate-300 bg-white px-3 py-2 text-xs text-slate-600 md:flex"><Search className="size-3.5" />Search patients, members...</div><button onClick={() => router.push(workspace === 'hospital' ? '/hospital/alerts' : '/insurance/interventions')} aria-label="Open notifications" className="relative rounded-lg p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-950"><Bell className="size-4" /><span className="absolute right-1 top-1 size-1.5 rounded-full bg-rose-400" /></button><div className="grid size-8 place-items-center rounded-full border border-slate-600 bg-slate-100 text-[10px] font-bold text-teal-800">JD</div></div></header> }
+  const crumbs = useMemo(() => {
+    if (items && items.length > 0) return items;
+    const parts = pathname.split('/').filter(Boolean);
+    if (parts.length === 0) return [{ label: 'CarePath Hospital', href: '/hospital' }];
+
+    const generated: Array<{ label: string; href?: string }> = [];
+    const ws = parts[0] === 'insurance' ? 'insurance' : 'hospital';
+    generated.push({
+      label: ws === 'insurance' ? 'Insurance Population' : 'Hospital Care Mgmt',
+      href: `/${ws}`
+    });
+
+    if (parts.length > 1) {
+      const section = parts[1];
+      const sectionLabels: Record<string, string> = {
+        patients: 'Patients Worklist',
+        members: 'Members Financials',
+        'care-journey': 'Care Journey',
+        appointments: 'Appointments',
+        alerts: 'Alerts & Outreach',
+        reports: 'Clinical Reports',
+        interventions: 'Intervention Engine',
+        trends: 'Population Trends',
+        impact: 'Impact / ROI Ledger',
+      };
+      generated.push({
+        label: sectionLabels[section] || (section.charAt(0).toUpperCase() + section.slice(1)),
+        href: `/${ws}/${section}`
+      });
+
+      if (parts.length > 2) {
+        const entityId = parts[2];
+        const isSubpage = ['journey', 'explanation', 'alerts', 'analysis'].includes(entityId);
+        if (!isSubpage) {
+          const matchPatient = staticPatients.find(p => p.id === entityId);
+          const matchMember = staticMembers.find(m => m.id === entityId);
+          const name = matchPatient ? `${matchPatient.name} (${entityId})` : matchMember ? `${matchMember.name} (${entityId})` : entityId;
+          generated.push({
+            label: name,
+            href: `/${ws}/${section}/${entityId}`
+          });
+        }
+        if (parts.length > 3) {
+          const subpage = parts[3];
+          const subLabels: Record<string, string> = {
+            journey: 'Care Journey',
+            explanation: 'Risk Factors (SHAP)',
+            alerts: 'Outreach Alert',
+            analysis: 'Encounter Audit'
+          };
+          generated.push({
+            label: subLabels[subpage] || subpage,
+          });
+        }
+      }
+    }
+    return generated;
+  }, [items, pathname]);
+
+  return (
+    <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-slate-500 overflow-x-auto py-1">
+      {crumbs.map((crumb, idx) => {
+        const isLast = idx === crumbs.length - 1;
+        return (
+          <div key={idx} className="flex items-center gap-1.5 flex-shrink-0">
+            {idx > 0 && <ChevronRight className="size-3 text-slate-400 flex-shrink-0" />}
+            {isLast || !crumb.href ? (
+              <span className="font-semibold text-slate-900 truncate max-w-[200px] sm:max-w-xs">{crumb.label}</span>
+            ) : (
+              <button
+                type="button"
+                onClick={() => router.push(crumb.href!)}
+                className="hover:text-teal-700 hover:underline transition truncate max-w-[150px] sm:max-w-xs"
+              >
+                {crumb.label}
+              </button>
+            )}
+          </div>
+        );
+      })}
+    </nav>
+  );
+}
+
+/* ── Global Command Palette & Quick Search (Cmd+K) ────────────────────────── */
+interface SearchResultItem {
+  id: string;
+  title: string;
+  subtitle?: string;
+  category: 'Pages' | 'Patients' | 'Members' | 'Actions';
+  href?: string;
+  action?: () => void;
+  badge?: string;
+  badgeTone?: 'rose' | 'amber' | 'teal' | 'slate';
+  icon?: React.ElementType;
+}
+
+function CommandPalette({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) {
+  const router = useRouter();
+  const [query, setQuery] = useState('');
+  const [activeCategory, setActiveCategory] = useState<'All' | 'Pages' | 'Patients' | 'Members' | 'Actions'>('All');
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [apiResults, setApiResults] = useState<{ patients: Patient[]; members: Member[] }>({ patients: [], members: [] });
+  const [searching, setSearching] = useState(false);
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      setTimeout(() => inputRef.current?.focus(), 50);
+      setQuery('');
+      setSelectedIndex(0);
+    }
+  }, [isOpen]);
+
+  // Live search query
+  useEffect(() => {
+    if (!query.trim()) {
+      setApiResults({ patients: [], members: [] });
+      setSearching(false);
+      return;
+    }
+    const timer = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const [ptsRes, memRes] = await Promise.allSettled([
+          api.patients({ q: query, limit: 5 }),
+          api.members({ q: query, limit: 5 })
+        ]);
+        const pts = ptsRes.status === 'fulfilled' ? ptsRes.value.patients : [];
+        const mems = memRes.status === 'fulfilled' ? memRes.value.members : [];
+        setApiResults({ patients: pts, members: mems });
+      } catch {
+        // fallback
+      } finally {
+        setSearching(false);
+      }
+    }, 250);
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  // Static navigation and quick links
+  const staticNavigationItems: SearchResultItem[] = useMemo(() => [
+    { id: 'page-hosp-dash', title: 'Hospital Dashboard', subtitle: 'Care management overview & emergency signals', category: 'Pages', href: '/hospital', icon: LayoutDashboard },
+    { id: 'page-hosp-pts', title: 'Patients Worklist', subtitle: 'Ranked Medicare beneficiary list with risk scores', category: 'Pages', href: '/hospital/patients', icon: Users, badge: '7,754 Lives' },
+    { id: 'page-hosp-journey', title: 'Care Journey Timeline', subtitle: 'Longitudinal clinical encounters and events', category: 'Pages', href: '/hospital/care-journey', icon: GitBranch },
+    { id: 'page-hosp-alerts', title: 'Outreach & Alerts', subtitle: 'Real-time proactive SMS notifications & tasks', category: 'Pages', href: '/hospital/alerts', icon: Bell, badge: '4 Pending', badgeTone: 'rose' },
+    { id: 'page-hosp-reports', title: 'Clinical Reports Ingestion', subtitle: 'PDF ingestion and automatic SHAP factor rescoring', category: 'Pages', href: '/hospital/reports', icon: FileText },
+    { id: 'page-ins-dash', title: 'Insurance Population Dashboard', subtitle: 'Population spend, avoidable leakage & analytics', category: 'Pages', href: '/insurance', icon: Shield, badge: '$38.4M Spend' },
+    { id: 'page-ins-members', title: 'Members Financial Roster', subtitle: 'Avoidable ED leakage and high-priority cohorts', category: 'Pages', href: '/insurance/members', icon: Users },
+    { id: 'page-ins-engine', title: 'Intervention Engine', subtitle: 'Priority score triage (Risk + Opportunity + Impact)', category: 'Pages', href: '/insurance/interventions', icon: Target },
+    { id: 'page-ins-trends', title: 'Population Health Trends', subtitle: '12-month longitudinal risk & utilization shifts', category: 'Pages', href: '/insurance/trends', icon: TrendingUp },
+    { id: 'page-ins-impact', title: 'Financial Impact & ROI Ledger', subtitle: 'Executive care management ROI simulator', category: 'Pages', href: '/insurance/impact', icon: BarChart3, badge: '4.2x ROI', badgeTone: 'teal' },
+  ], []);
+
+  const staticActions: SearchResultItem[] = useMemo(() => [
+    { id: 'act-switch-hosp', title: 'Switch to Hospital / Care Mgmt Workspace', subtitle: 'View clinical patient queues and outreach', category: 'Actions', action: () => router.push('/hospital'), icon: Building2 },
+    { id: 'act-switch-ins', title: 'Switch to Insurance / Population Analytics Workspace', subtitle: 'View payer leakage, ROI models and members', category: 'Actions', action: () => router.push('/insurance'), icon: ShieldCheck },
+    { id: 'act-top-patient', title: 'Open Top Priority Patient: Maya Thompson', subtitle: 'High Risk (91%) · CHF, COPD · Missed follow-up', category: 'Actions', href: '/hospital/patients/P-1042', icon: Activity, badge: 'High Risk 91%', badgeTone: 'rose' },
+    { id: 'act-demo-sms', title: 'Trigger Real-Time SMS Outreach Demo', subtitle: 'Test SMS dispatch to Indian (+91) mobile numbers', category: 'Actions', href: '/hospital/patients/P-1042/alerts', icon: Send, badge: 'SMS Gateway', badgeTone: 'teal' },
+    { id: 'act-roi-sim', title: 'Run Interactive Payer ROI Simulator', subtitle: 'Simulate financial net savings for 7,754 panel lives', category: 'Actions', href: '/insurance/impact', icon: Sparkles },
+  ], [router]);
+
+  // Combined and filtered search results
+  const items: SearchResultItem[] = useMemo(() => {
+    let list: SearchResultItem[] = [];
+
+    if (!query.trim()) {
+      list = [...staticNavigationItems.slice(0, 6), ...staticActions.slice(0, 3)];
+      staticPatients.slice(0, 4).forEach(p => {
+        list.push({
+          id: `static-pt-${p.id}`,
+          title: `${p.name} (${p.id})`,
+          subtitle: `Age ${p.age} · ${p.conditions} · ${p.continuity} continuity`,
+          category: 'Patients',
+          href: `/hospital/patients/${p.id}`,
+          icon: Users,
+          badge: `${Math.round(p.risk * 100)}% ${p.level}`,
+          badgeTone: p.level === 'High' ? 'rose' : p.level === 'Medium' ? 'amber' : 'teal'
+        });
+      });
+    } else {
+      const q = query.toLowerCase();
+      staticNavigationItems.filter(item => item.title.toLowerCase().includes(q) || item.subtitle?.toLowerCase().includes(q)).forEach(item => list.push(item));
+      staticActions.filter(item => item.title.toLowerCase().includes(q) || item.subtitle?.toLowerCase().includes(q)).forEach(item => list.push(item));
+
+      const patientPool = apiResults.patients.length > 0 ? apiResults.patients : staticPatients.filter(p => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q) || p.conditions.toLowerCase().includes(q));
+      patientPool.forEach(p => {
+        list.push({
+          id: `dyn-pt-${p.id}`,
+          title: `${p.name} (${p.id})`,
+          subtitle: `Age ${p.age} · ${p.conditions || 'General'} · ${p.event || 'Patient record'}`,
+          category: 'Patients',
+          href: `/hospital/patients/${p.id}`,
+          icon: Users,
+          badge: `${Math.round(p.risk * 100)}% ${p.level}`,
+          badgeTone: p.level === 'High' ? 'rose' : p.level === 'Medium' ? 'amber' : 'teal'
+        });
+      });
+
+      const memberPool = apiResults.members.length > 0 ? apiResults.members : staticMembers.filter(m => m.name.toLowerCase().includes(q) || m.id.toLowerCase().includes(q) || m.gap.toLowerCase().includes(q));
+      memberPool.forEach(m => {
+        list.push({
+          id: `dyn-mem-${m.id}`,
+          title: `${m.name} (${m.id})`,
+          subtitle: `Spend: ${m.cost} · Gap: ${m.gap} · Avoidable: ${m.avoidable_spend || '$1,850'}`,
+          category: 'Members',
+          href: `/insurance/members/${m.id}`,
+          icon: Shield,
+          badge: `Priority ${m.priority}`,
+          badgeTone: m.priority > 85 ? 'rose' : 'amber'
+        });
+      });
+    }
+
+    if (activeCategory !== 'All') {
+      return list.filter(item => item.category === activeCategory);
+    }
+    return list;
+  }, [query, activeCategory, staticNavigationItems, staticActions, apiResults]);
+
+  const handleSelect = (item: SearchResultItem) => {
+    onClose();
+    if (item.action) {
+      item.action();
+    } else if (item.href) {
+      router.push(item.href);
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev + 1) % Math.max(1, items.length));
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex(prev => (prev - 1 + items.length) % Math.max(1, items.length));
+    } else if (e.key === 'Enter') {
+      e.preventDefault();
+      if (items[selectedIndex]) {
+        handleSelect(items[selectedIndex]);
+      }
+    } else if (e.key === 'Escape') {
+      onClose();
+    }
+  };
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-start justify-center p-4 pt-16 sm:pt-24 bg-slate-950/60 backdrop-blur-sm animate-in fade-in duration-150" onClick={onClose}>
+      <div
+        className="w-full max-w-2xl rounded-2xl border border-slate-200 bg-white shadow-2xl overflow-hidden flex flex-col max-h-[80vh] animate-in zoom-in-95 duration-150"
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={handleKeyDown}
+      >
+        {/* Search Input Bar */}
+        <div className="flex items-center gap-3 border-b border-slate-200 px-4 py-3.5 bg-slate-50/50">
+          <Search className="size-5 text-teal-700 flex-shrink-0" />
+          <input
+            ref={inputRef}
+            type="text"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setSelectedIndex(0);
+            }}
+            placeholder="Search patients, members, pages, interventions, or actions..."
+            className="w-full bg-transparent text-sm text-slate-900 outline-none placeholder:text-slate-400 font-medium"
+          />
+          {searching && <Loader2 className="size-4 animate-spin text-teal-600 flex-shrink-0" />}
+          {query && (
+            <button onClick={() => setQuery('')} className="rounded p-1 text-slate-400 hover:text-slate-600">
+              <X className="size-4" />
+            </button>
+          )}
+          <kbd className="hidden sm:inline-flex items-center gap-1 rounded bg-slate-200/80 px-2 py-0.5 text-[10px] font-mono text-slate-600">
+            ESC to close
+          </kbd>
+        </div>
+
+        {/* Filter Category Tabs */}
+        <div className="flex items-center gap-1.5 border-b border-slate-100 px-4 py-2 bg-white overflow-x-auto text-xs">
+          {(['All', 'Pages', 'Patients', 'Members', 'Actions'] as const).map(cat => (
+            <button
+              key={cat}
+              onClick={() => {
+                setActiveCategory(cat);
+                setSelectedIndex(0);
+              }}
+              className={`rounded-lg px-2.5 py-1 text-xs font-semibold transition ${
+                activeCategory === cat ? 'bg-teal-700 text-white' : 'text-slate-600 hover:bg-slate-100'
+              }`}
+            >
+              {cat}
+            </button>
+          ))}
+        </div>
+
+        {/* Results List */}
+        <div className="flex-1 overflow-y-auto p-2 divide-y divide-slate-100">
+          {items.length === 0 ? (
+            <div className="py-12 text-center text-slate-400 text-xs">
+              <Search className="size-8 mx-auto mb-2 text-slate-300 stroke-1" />
+              <p className="font-semibold text-slate-700">No results found for &ldquo;{query}&rdquo;</p>
+              <p className="mt-1">Try searching by patient name, ID (e.g. P-1042), condition, or page title.</p>
+            </div>
+          ) : (
+            items.map((item, idx) => {
+              const isSelected = idx === selectedIndex;
+              const Icon = item.icon || Navigation;
+              return (
+                <div
+                  key={item.id}
+                  onClick={() => handleSelect(item)}
+                  onMouseEnter={() => setSelectedIndex(idx)}
+                  className={`flex items-center justify-between gap-3 rounded-xl px-3 py-2.5 cursor-pointer transition ${
+                    isSelected ? 'bg-teal-700/10 text-teal-950 ring-1 ring-teal-600/20' : 'hover:bg-slate-50 text-slate-800'
+                  }`}
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <div className={`grid size-8 place-items-center rounded-lg flex-shrink-0 ${
+                      isSelected ? 'bg-teal-700 text-white' : 'bg-slate-100 text-slate-600'
+                    }`}>
+                      <Icon className="size-4" />
+                    </div>
+                    <div className="min-w-0">
+                      <p className="text-xs font-semibold truncate flex items-center gap-2">
+                        <span>{item.title}</span>
+                        <span className="text-[10px] uppercase font-bold text-slate-400 font-mono">[{item.category}]</span>
+                      </p>
+                      {item.subtitle && <p className="text-[11px] text-slate-500 truncate">{item.subtitle}</p>}
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    {item.badge && (
+                      <span className={`rounded-md px-2 py-0.5 text-[10px] font-bold font-mono ${
+                        item.badgeTone === 'rose' ? 'bg-rose-100 text-rose-800' :
+                        item.badgeTone === 'amber' ? 'bg-amber-100 text-amber-800' :
+                        item.badgeTone === 'teal' ? 'bg-teal-100 text-teal-800' : 'bg-slate-100 text-slate-700'
+                      }`}>
+                        {item.badge}
+                      </span>
+                    )}
+                    <ChevronRight className={`size-3.5 ${isSelected ? 'text-teal-700' : 'text-slate-300'}`} />
+                  </div>
+                </div>
+              );
+            })
+          )}
+        </div>
+
+        {/* Footer shortcuts helper */}
+        <div className="flex items-center justify-between border-t border-slate-200 bg-slate-50 px-4 py-2 text-[11px] text-slate-500">
+          <div className="flex items-center gap-3">
+            <span><kbd className="rounded bg-white border border-slate-200 px-1 py-0.5 font-mono text-[10px]">↑</kbd> <kbd className="rounded bg-white border border-slate-200 px-1 py-0.5 font-mono text-[10px]">↓</kbd> navigate</span>
+            <span><kbd className="rounded bg-white border border-slate-200 px-1 py-0.5 font-mono text-[10px]">↵</kbd> select</span>
+          </div>
+          <span className="text-teal-800 font-semibold">CarePath Global Quick Search</span>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ── Sidebar Component ───────────────────────────────────────────────────── */
+function Sidebar({
+  workspace,
+  setWorkspace,
+  collapsed,
+  setCollapsed
+}: {
+  workspace: Workspace;
+  setWorkspace: (value: Workspace) => void;
+  collapsed: boolean;
+  setCollapsed: (val: boolean) => void;
+}) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  useEffect(() => {
+    const handleOpen = () => setMobileOpen(true);
+    const handleClose = () => setMobileOpen(false);
+    window.addEventListener('carepath-menu', handleOpen);
+    window.addEventListener('carepath-close-menu', handleClose);
+    return () => {
+      window.removeEventListener('carepath-menu', handleOpen);
+      window.removeEventListener('carepath-close-menu', handleClose);
+    };
+  }, []);
+
+  const handleNavClick = (href: string) => {
+    router.push(href);
+    setMobileOpen(false);
+  };
+
+  const isHospital = workspace === 'hospital';
+
+  return (
+    <>
+      <aside
+        className={`fixed inset-y-0 left-0 z-40 flex flex-col border-r border-slate-200 bg-slate-50 p-3 transition-all duration-200 lg:static ${
+          collapsed ? 'lg:w-20' : 'lg:w-64'
+        } ${mobileOpen ? 'w-64 translate-x-0 shadow-2xl' : '-translate-x-full lg:translate-x-0'}`}
+      >
+        {/* Brand Header */}
+        <div className="flex items-center justify-between px-2 py-2">
+          <div className="flex items-center gap-3 overflow-hidden">
+            <div className="grid size-9 place-items-center rounded-xl bg-teal-700 text-white flex-shrink-0 shadow-sm">
+              <Activity className="size-5" />
+            </div>
+            {!collapsed && (
+              <div className="truncate">
+                <p className="text-sm font-bold tracking-tight text-slate-950 flex items-center gap-1.5">
+                  CarePath <span className="rounded bg-teal-100 px-1 py-0.2 text-[9px] font-mono text-teal-800">v2.4</span>
+                </p>
+                <p className="text-[10px] uppercase tracking-[0.16em] text-slate-500 font-medium">ED Avoidance Engine</p>
+              </div>
+            )}
+          </div>
+          {mobileOpen && (
+            <button
+              onClick={() => setMobileOpen(false)}
+              aria-label="Close mobile navigation"
+              className="lg:hidden rounded-lg p-1.5 text-slate-500 hover:bg-slate-200"
+            >
+              <X className="size-4" />
+            </button>
+          )}
+        </div>
+
+        {/* Workspace Switcher Selector */}
+        <div className="my-4">
+          {!collapsed ? (
+            <div className="rounded-xl border border-slate-300/80 bg-white p-1 shadow-xs">
+              <button
+                onClick={() => setWorkspace(isHospital ? 'insurance' : 'hospital')}
+                className="flex w-full items-center justify-between rounded-lg px-2.5 py-2 text-left hover:bg-slate-100 transition group"
+                title={`Currently in ${isHospital ? 'Hospital' : 'Insurance'} mode. Click to switch.`}
+              >
+                <div className="flex items-center gap-2">
+                  <div className={`grid size-6 place-items-center rounded-md ${isHospital ? 'bg-teal-700 text-white' : 'bg-indigo-700 text-white'}`}>
+                    {isHospital ? <Building2 className="size-3.5" /> : <ShieldCheck className="size-3.5" />}
+                  </div>
+                  <div>
+                    <span className="block text-[9px] uppercase tracking-[0.14em] text-slate-400 font-bold">Active Workspace</span>
+                    <span className="text-xs font-bold text-slate-800 group-hover:text-teal-800">
+                      {isHospital ? 'Hospital / Care Mgmt' : 'Insurance / Population'}
+                    </span>
+                  </div>
+                </div>
+                <ChevronDown className="size-3.5 text-slate-400 group-hover:text-slate-700" />
+              </button>
+            </div>
+          ) : (
+            <button
+              onClick={() => setWorkspace(isHospital ? 'insurance' : 'hospital')}
+              className={`grid size-10 mx-auto place-items-center rounded-xl transition ${
+                isHospital ? 'bg-teal-700 text-white' : 'bg-indigo-700 text-white'
+              }`}
+              title={`Switch Workspace (Current: ${isHospital ? 'Hospital' : 'Insurance'})`}
+            >
+              {isHospital ? <Building2 className="size-5" /> : <ShieldCheck className="size-5" />}
+            </button>
+          )}
+        </div>
+
+        {/* Navigation Items */}
+        <nav className="flex flex-col gap-1 flex-1 overflow-y-auto">
+          {!collapsed && (
+            <p className="px-2 pb-1 text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">
+              {isHospital ? 'Clinical Navigation' : 'Population Analytics'}
+            </p>
+          )}
+          {navItems(workspace).map((item) => {
+            const Icon = icons[item.icon as keyof typeof icons] || LayoutDashboard;
+            const active = pathname === item.href || (item.href !== '/hospital' && item.href !== '/insurance' && pathname.startsWith(item.href));
+            
+            return (
+              <button
+                key={item.href}
+                onClick={() => handleNavClick(item.href)}
+                title={collapsed ? item.label : undefined}
+                className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-left text-sm transition relative group ${
+                  active
+                    ? 'bg-teal-700/10 text-teal-900 font-semibold ring-1 ring-teal-500/20'
+                    : 'text-slate-600 hover:bg-slate-200/60 hover:text-slate-900 font-medium'
+                } ${collapsed ? 'justify-center px-2' : ''}`}
+              >
+                {active && <span className="absolute left-0 top-1.5 bottom-1.5 w-1 bg-teal-700 rounded-r-full" />}
+                <Icon className={`size-4 flex-shrink-0 ${active ? 'text-teal-700' : 'text-slate-500 group-hover:text-slate-800'}`} />
+                {!collapsed && <span className="truncate">{item.label}</span>}
+                
+                {!collapsed && item.label === 'Alerts' && (
+                  <span className="ml-auto rounded-full bg-rose-500 px-1.5 py-0.5 text-[10px] font-bold text-white">4</span>
+                )}
+                {!collapsed && item.label === 'Patients' && (
+                  <span className="ml-auto rounded-md bg-slate-200/80 px-1.5 py-0.2 text-[10px] font-mono text-slate-700">7.7k</span>
+                )}
+                {!collapsed && item.label === 'Members' && (
+                  <span className="ml-auto rounded-md bg-slate-200/80 px-1.5 py-0.2 text-[10px] font-mono text-slate-700">7.7k</span>
+                )}
+                {!collapsed && item.label === 'Intervention Engine' && (
+                  <span className="ml-auto rounded-md bg-amber-100 text-amber-800 px-1.5 py-0.2 text-[10px] font-mono font-bold">642</span>
+                )}
+                {!collapsed && item.label === 'Impact / ROI' && (
+                  <span className="ml-auto rounded-md bg-emerald-100 text-emerald-800 px-1.5 py-0.2 text-[10px] font-mono font-bold">4.2x</span>
+                )}
+              </button>
+            );
+          })}
+        </nav>
+
+        {/* Bottom Rail Controls */}
+        <div className="mt-auto border-t border-slate-200 pt-3 space-y-2">
+          <button
+            onClick={() => window.dispatchEvent(new CustomEvent('carepath-open-search'))}
+            className={`flex w-full items-center gap-2 rounded-xl border border-slate-200 bg-white px-2.5 py-2 text-xs text-slate-600 hover:bg-slate-100 transition shadow-2xs ${
+              collapsed ? 'justify-center' : 'justify-between'
+            }`}
+            title="Open Quick Search (Cmd+K)"
+          >
+            <div className="flex items-center gap-2">
+              <Search className="size-3.5 text-teal-700" />
+              {!collapsed && <span>Quick Search</span>}
+            </div>
+            {!collapsed && <kbd className="rounded bg-slate-100 px-1 py-0.5 font-mono text-[10px] text-slate-500">⌘K</kbd>}
+          </button>
+
+          <button
+            onClick={() => setCollapsed(!collapsed)}
+            className="hidden lg:flex w-full items-center justify-center gap-2 rounded-xl p-2 text-xs font-semibold text-slate-500 hover:bg-slate-200/70 hover:text-slate-900 transition"
+            title={collapsed ? 'Expand Sidebar' : 'Collapse Sidebar to Slim Mode'}
+          >
+            {collapsed ? <PanelLeft className="size-4" /> : <><PanelLeftClose className="size-4" /><span>Collapse Sidebar</span></>}
+          </button>
+
+          <div className={`flex items-center gap-2.5 px-2 py-1.5 ${collapsed ? 'justify-center' : ''}`}>
+            <div className="grid size-8 place-items-center rounded-full bg-teal-800 text-xs font-bold text-white flex-shrink-0 shadow-xs">
+              JD
+            </div>
+            {!collapsed && (
+              <div className="truncate min-w-0">
+                <p className="text-xs font-bold text-slate-900 truncate">Jordan Davis</p>
+                <p className="text-[10px] text-slate-500 truncate">Lead Care Navigator</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </aside>
+
+      {mobileOpen && (
+        <div
+          className="fixed inset-0 z-30 bg-slate-950/60 backdrop-blur-xs lg:hidden"
+          onClick={() => setMobileOpen(false)}
+        />
+      )}
+    </>
+  );
+}
+
+/* ── Header Component ────────────────────────────────────────────────────── */
+function Header({
+  workspace,
+  title,
+  breadcrumbs,
+  onOpenSearch
+}: {
+  workspace: Workspace;
+  title: string;
+  breadcrumbs?: Array<{ label: string; href?: string }>;
+  onOpenSearch: () => void;
+}) {
+  const router = useRouter();
+
+  const handleWorkspaceToggle = (targetWorkspace: Workspace) => {
+    if (targetWorkspace === workspace) return;
+    router.push(targetWorkspace === 'hospital' ? '/hospital' : '/insurance');
+  };
+
+  return (
+    <header className="sticky top-0 z-20 flex min-h-16 items-center justify-between border-b border-slate-200 bg-white/95 px-4 backdrop-blur-md lg:px-8">
+      {/* Left: Mobile Menu + Breadcrumbs */}
+      <div className="flex items-center gap-3 min-w-0">
+        <button
+          aria-label="Open mobile navigation"
+          className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 lg:hidden flex-shrink-0"
+          onClick={() => window.dispatchEvent(new CustomEvent('carepath-menu'))}
+        >
+          <Menu className="size-5" />
+        </button>
+
+        <div className="min-w-0 flex flex-col justify-center">
+          <Breadcrumbs items={breadcrumbs} />
+          <h1 className="text-sm font-bold text-slate-950 sm:text-base truncate">{title}</h1>
+        </div>
+      </div>
+
+      {/* Right: Dual Workspace Switcher + Global Search + Notifications + User */}
+      <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
+        <div className="hidden md:flex items-center rounded-xl bg-slate-100 p-1 border border-slate-200">
+          <button
+            onClick={() => handleWorkspaceToggle('hospital')}
+            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+              workspace === 'hospital'
+                ? 'bg-teal-700 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+            }`}
+          >
+            <Building2 className="size-3.5" />
+            <span>Hospital</span>
+          </button>
+          <button
+            onClick={() => handleWorkspaceToggle('insurance')}
+            className={`flex items-center gap-1.5 rounded-lg px-2.5 py-1 text-xs font-bold transition ${
+              workspace === 'insurance'
+                ? 'bg-teal-700 text-white shadow-xs'
+                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/50'
+            }`}
+          >
+            <ShieldCheck className="size-3.5" />
+            <span>Insurance Payer</span>
+          </button>
+        </div>
+
+        <button
+          type="button"
+          onClick={onOpenSearch}
+          className="flex items-center gap-2 rounded-xl border border-slate-300 bg-slate-50/80 px-3 py-1.5 text-xs text-slate-600 hover:bg-slate-100 hover:border-slate-400 transition shadow-2xs"
+          title="Search patients, members, and pages (Cmd+K)"
+        >
+          <Search className="size-3.5 text-teal-700" />
+          <span className="hidden sm:inline">Search patients, members, pages...</span>
+          <span className="sm:hidden">Search</span>
+          <kbd className="hidden md:inline-flex items-center gap-0.5 rounded bg-white border border-slate-200 px-1.5 py-0.5 text-[10px] font-mono text-slate-600">
+            ⌘K
+          </kbd>
+        </button>
+
+        <button
+          onClick={() => router.push(workspace === 'hospital' ? '/hospital/alerts' : '/insurance/interventions')}
+          aria-label="Open notifications"
+          className="relative rounded-xl border border-slate-200 bg-white p-2 text-slate-600 hover:bg-slate-100 hover:text-slate-950 transition"
+          title="Review Alerts & Action Queue"
+        >
+          <Bell className="size-4" />
+          <span className="absolute right-1.5 top-1.5 size-2 rounded-full bg-rose-500 ring-2 ring-white" />
+        </button>
+
+        <div className="grid size-8 place-items-center rounded-full bg-teal-800 text-xs font-bold text-white shadow-xs">
+          JD
+        </div>
+      </div>
+    </header>
+  );
+}
 
 function LineChart({ insurance = false, data }: { insurance?: boolean; data?: TrendPoint[] }) { const chartData = data ?? []; return <div className="h-56 w-full">{chartData.length === 0 ? <LoadingState /> : <ResponsiveContainer width="100%" height="100%"><AreaChart data={chartData}><CartesianGrid stroke="#223247" strokeDasharray="3 3" vertical={false} /><XAxis dataKey="month" tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} /><YAxis tick={{ fill: '#64748b', fontSize: 11 }} axisLine={false} tickLine={false} /><Tooltip contentStyle={{ background: '#ffffff', border: '1px solid #dbe4e8', borderRadius: 4, color: '#1e293b' }} /><Area type="monotone" dataKey={insurance ? 'medium' : 'high'} stroke="#0f766e" strokeWidth={2.5} fill="none" /></AreaChart></ResponsiveContainer>}</div> }
 function DistributionChart({ high = 11.5, medium = 88.5, low = 0 }: { high?: number; medium?: number; low?: number }) { const data = [{ name: 'High', value: high, color: '#fb7185' }, { name: 'Medium', value: medium, color: '#fbbf24' }, { name: 'Low', value: low, color: '#2dd4bf' }]; return <div className="flex h-56 items-center gap-4"><ResponsiveContainer width="52%" height="100%"><PieChart><Pie data={data} dataKey="value" innerRadius={58} outerRadius={78} paddingAngle={4}>{data.map((entry) => <Cell key={entry.name} fill={entry.color} />)}</Pie><Tooltip contentStyle={{ background: '#ffffff', border: '1px solid #dbe4e8', borderRadius: 4, color: '#1e293b' }} /></PieChart></ResponsiveContainer><div className="flex flex-col gap-3">{data.map((item) => <div key={item.name} className="flex items-center gap-2 text-xs text-slate-700"><span className="size-2 rounded-full" style={{ background: item.color }} />{item.name}<span className="font-mono text-slate-500">{item.value}%</span></div>)}</div></div> }
@@ -291,14 +956,91 @@ function PatientTable({ compact = false }: { compact?: boolean }) {
   );
 }
 
-function HospitalDashboard() { const router = useRouter(); const { data: stats, loading: statsLoading, error: statsError, reload: reloadStats } = useApi(() => api.hospitalDashboard(), []); const { data: trends, loading: trendsLoading, error: trendsError, reload: reloadTrends } = useApi(() => api.trends(), []); const { data: heatmapData, loading: heatmapLoading, error: heatmapError, reload: reloadHeatmap } = useApi(() => api.heatmap(), []); if (statsLoading || trendsLoading || heatmapLoading) return <PageFrame workspace="hospital" title="Care Management"><Card className="p-12"><LoadingState /></Card></PageFrame>; if (statsError || trendsError || heatmapError) return <PageFrame workspace="hospital" title="Care Management"><Card className="p-12"><ErrorState message={statsError || trendsError || heatmapError || 'Failed to load dashboard data'} onRetry={() => { reloadStats(); reloadTrends(); reloadHeatmap(); }} /></Card></PageFrame>; const s = stats ?? { total_patients: 0, high_risk: 0, medium_risk: 0, needs_attention: 0, recent_ed_events: 0, missed_appointments: 0, high_pct: 0, medium_pct: 0, low_pct: 0 }; const cells = heatmapData?.cells ?? []; if (s.total_patients === 0) return <PageFrame workspace="hospital" title="Care Management"><Card className="p-12 text-center text-slate-500"><p className="text-sm font-semibold">No patient panel data available.</p><button onClick={() => { reloadStats(); reloadTrends(); reloadHeatmap(); }} className="mt-3 text-xs font-semibold text-teal-700 hover:underline">Refresh</button></Card></PageFrame>; return <PageFrame workspace="hospital" title="Care Management"><div className="flex flex-col gap-6"><div className="flex flex-wrap items-end justify-between gap-4"><div><p className="text-xs text-slate-500">Tuesday, April 14, 2026 · Northstar Health Network</p><h2 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">What needs attention today?</h2></div><Button onClick={() => router.push('/hospital/patients')} variant="secondary"><Users className="size-4" />Open patient worklist</Button></div><div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6"><Kpi label="Total patients" value={String(s.total_patients)} detail="ML-scored population" icon={Users} /><Kpi label="High risk" value={String(s.high_risk)} detail={`${s.high_pct}% of panel`} tone="rose" icon={AlertTriangle} /><Kpi label="Medium risk" value={String(s.medium_risk)} detail={`${s.medium_pct}% of panel`} tone="amber" icon={Activity} /><Kpi label="Needs attention" value={String(s.needs_attention)} detail="Requires outreach" icon={Target} /><Kpi label="Recent ED events" value={String(s.recent_ed_events)} detail="Patients with ED visits" icon={Activity} /><Kpi label="Missed appointments" value={String(s.missed_appointments)} detail="High-risk patients" tone="rose" icon={CalendarDays} /></div><div className="grid gap-4 xl:grid-cols-[1.1fr_.9fr]"><Card className="p-5"><SectionTitle eyebrow="Population signal" title="Risk distribution" action={<span className="text-[10px] text-slate-500">V2 Ensemble model</span>} /><DistributionChart high={s.high_pct} medium={s.medium_pct} low={s.low_pct} /></Card><Card className="p-5"><SectionTitle eyebrow="Six-month view" title="High-risk trend" action={<span className="inline-flex items-center gap-1 text-xs text-rose-700"><ArrowUpRight className="size-3" />+7 pts</span>} /><LineChart data={trends?.trend_data} /></Card></div><Card className="p-5"><SectionTitle eyebrow="Exploration" title="Risk heatmap" action={<Button variant="ghost" onClick={() => router.push('/hospital/patients')}>Drill into patients <ArrowUpRight className="size-3" /></Button>} /><div className="mt-5 grid grid-cols-4 gap-2 text-center text-[10px] text-slate-500"><div /><div>Low burden</div><div>Moderate burden</div><div>High burden</div>{['55-64','65-74','75+'].map((ageKey) => <div key={ageKey} className="contents"><div className="py-4 text-left text-slate-600">Age {ageKey}</div>{['Low','Moderate','High'].map((burdenKey) => { const cell = cells.find((c) => c.age_group === ageKey && c.burden === burdenKey); const pct = cell ? cell.percentage : 0; const bgClass = pct > 20 ? 'bg-rose-500/35' : pct > 10 ? 'bg-amber-400/25' : 'bg-teal-500/20'; return <button key={burdenKey} onClick={() => router.push('/hospital/patients')} className={`rounded-xl border border-slate-300 py-5 text-sm font-semibold text-slate-950 transition hover:scale-[1.02] ${bgClass}`}>{pct}%</button> })}</div>)}</div><p className="mt-4 text-xs text-slate-500">Cells represent the share of the demo panel with a high navigation-opportunity score. Select a cell to open the filtered worklist.</p></Card><PatientTable compact /></div></PageFrame> }
+function HospitalDashboard() {
+  const router = useRouter();
+  const { data: stats, loading: statsLoading, error: statsError, reload: reloadStats } = useApi(() => api.hospitalDashboard(), []);
+  const { data: trends, loading: trendsLoading, error: trendsError, reload: reloadTrends } = useApi(() => api.trends(), []);
+  const { data: heatmapData, loading: heatmapLoading, error: heatmapError, reload: reloadHeatmap } = useApi(() => api.heatmap(), []);
+  
+  if (statsLoading || trendsLoading || heatmapLoading) return <PageFrame workspace="hospital" title="Care Management"><Card className="p-12"><LoadingState /></Card></PageFrame>;
+  if (statsError || trendsError || heatmapError) return <PageFrame workspace="hospital" title="Care Management"><Card className="p-12"><ErrorState message={statsError || trendsError || heatmapError || 'Failed to load dashboard data'} onRetry={() => { reloadStats(); reloadTrends(); reloadHeatmap(); }} /></Card></PageFrame>;
+  
+  const s = stats ?? { total_patients: 0, high_risk: 0, medium_risk: 0, needs_attention: 0, recent_ed_events: 0, missed_appointments: 0, high_pct: 0, medium_pct: 0, low_pct: 0 };
+  const cells = heatmapData?.cells ?? [];
+  
+  if (s.total_patients === 0) return <PageFrame workspace="hospital" title="Care Management"><Card className="p-12 text-center text-slate-500"><p className="text-sm font-semibold">No patient panel data available.</p><button onClick={() => { reloadStats(); reloadTrends(); reloadHeatmap(); }} className="mt-3 text-xs font-semibold text-teal-700 hover:underline">Refresh</button></Card></PageFrame>;
+  
+  return (
+    <PageFrame workspace="hospital" title="Care Management">
+      <div className="flex flex-col gap-6">
+        <div className="flex flex-wrap items-end justify-between gap-4">
+          <div>
+            <p className="text-xs text-slate-500">Tuesday, April 14, 2026 · Northstar Health Network</p>
+            <h2 className="mt-1 text-2xl font-semibold tracking-tight text-slate-950">What needs attention today?</h2>
+          </div>
+          <Button onClick={() => router.push('/hospital/patients')} variant="secondary">
+            <Users className="size-4" />Open patient worklist
+          </Button>
+        </div>
 
+        <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
+          <Kpi label="Total patients" value={String(s.total_patients)} detail="ML-scored population" icon={Users} />
+          <Kpi label="High risk" value={String(s.high_risk)} detail={`${s.high_pct}% of panel`} tone="rose" icon={AlertTriangle} />
+          <Kpi label="Medium risk" value={String(s.medium_risk)} detail={`${s.medium_pct}% of panel`} tone="amber" icon={Activity} />
+          <Kpi label="Needs attention" value={String(s.needs_attention)} detail="Requires outreach" icon={Target} />
+          <Kpi label="Recent ED events" value={String(s.recent_ed_events)} detail="Patients with ED visits" icon={Activity} />
+          <Kpi label="Missed appointments" value={String(s.missed_appointments)} detail="High-risk patients" tone="rose" icon={CalendarDays} />
+        </div>
+
+        <div className="grid gap-4 xl:grid-cols-[1.1fr_.9fr]">
+          <Card className="p-5">
+            <SectionTitle eyebrow="Population signal" title="Risk distribution" action={<span className="text-[10px] text-slate-500">V2 Ensemble model</span>} />
+            <DistributionChart high={s.high_pct} medium={s.medium_pct} low={s.low_pct} />
+          </Card>
+          <Card className="p-5">
+            <SectionTitle eyebrow="Six-month view" title="High-risk trend" action={<span className="inline-flex items-center gap-1 text-xs text-rose-700"><ArrowUpRight className="size-3" />+7 pts</span>} />
+            <LineChart data={trends?.trend_data} />
+          </Card>
+        </div>
+
+        <Card className="p-5">
+          <SectionTitle eyebrow="Exploration" title="Risk heatmap" action={<Button variant="ghost" onClick={() => router.push('/hospital/patients')}>Drill into patients <ArrowUpRight className="size-3" /></Button>} />
+          <div className="mt-5 grid grid-cols-4 gap-2 text-center text-[10px] text-slate-500">
+            <div /><div>Low burden</div><div>Moderate burden</div><div>High burden</div>
+            {['55-64','65-74','75+'].map((ageKey) => (
+              <div key={ageKey} className="contents">
+                <div className="py-4 text-left text-slate-600 font-semibold">Age {ageKey}</div>
+                {['Low','Moderate','High'].map((burdenKey) => {
+                  const cell = cells.find((c) => c.age_group === ageKey && c.burden === burdenKey);
+                  const pct = cell ? cell.percentage : 0;
+                  const bgClass = pct > 20 ? 'bg-rose-500/35 border-rose-400' : pct > 10 ? 'bg-amber-400/25 border-amber-300' : 'bg-teal-500/20 border-teal-300';
+                  return (
+                    <button
+                      key={burdenKey}
+                      onClick={() => router.push('/hospital/patients')}
+                      className={`rounded-xl border py-5 text-sm font-bold text-slate-950 transition hover:scale-[1.02] shadow-2xs ${bgClass}`}
+                    >
+                      {pct}%
+                    </button>
+                  );
+                })}
+              </div>
+            ))}
+          </div>
+          <p className="mt-4 text-xs text-slate-500">Cells represent the share of the demo panel with a high navigation-opportunity score. Select a cell to open the filtered worklist.</p>
+        </Card>
+
+        <PatientTable compact />
+      </div>
+    </PageFrame>
+  );
+}
+
+/* ── PatientDetail with Sub-Tabs & Carousel Navigation ───────────────────── */
 function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
   const { data: patient, loading, error, reload } = useApi(() => api.patient(id), [id]);
   const router = useRouter();
   const [modal, setModal] = useState<'event' | 'alert' | 'upload' | null>(null);
-  const [sent, setSent] = useState(false);
-  const [uploading, setUploading] = useState(false);
   const [predicting, setPredicting] = useState(false);
   const [risk, setRisk] = useState(0);
   const [previousRisk, setPreviousRisk] = useState<number | null>(null);
@@ -306,8 +1048,14 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
   const [predictError, setPredictError] = useState<string | null>(null);
   const [evType, setEvType] = useState('Patient contacted');
   const [evDesc, setEvDesc] = useState('');
+  const [uploading, setUploading] = useState(false);
   const [journeyKey, setJourneyKey] = useState(0);
   const [explanationKey, setExplanationKey] = useState(0);
+
+  const patientIdList = ['P-1042', 'P-1088', 'P-1007', 'P-1120', 'P-1064', 'P-1099'];
+  const currentIndex = patientIdList.indexOf(id);
+  const prevPatientId = currentIndex > 0 ? patientIdList[currentIndex - 1] : patientIdList[patientIdList.length - 1];
+  const nextPatientId = currentIndex >= 0 && currentIndex < patientIdList.length - 1 ? patientIdList[currentIndex + 1] : patientIdList[0];
 
   useEffect(() => {
     if (patient) {
@@ -317,10 +1065,8 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
     }
   }, [patient]);
 
-  if (loading) return <PageFrame workspace="hospital" title="Loading…"><LoadingState /></PageFrame>;
+  if (loading) return <PageFrame workspace="hospital" title="Loading Patient..."><LoadingState /></PageFrame>;
   if (error || !patient) return <PageFrame workspace="hospital" title="Error"><ErrorState message={error ?? 'Patient not found'} onRetry={reload} /></PageFrame>;
-
-  const title = subpage === 'journey' ? 'Care journey' : subpage === 'explanation' ? 'Risk explanation' : subpage === 'alerts' ? 'Patient alert' : 'Patient overview';
 
   const handlePredictRisk = async () => {
     try {
@@ -371,22 +1117,67 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
     }
   };
 
-  const handleAlert = async () => {
-    try {
-      await api.sendAlert(id, { intervention_type: 'Care follow-up' });
-      setSent(true);
-      setModal(null);
-    } catch {}
-  };
+  const activeSubTab = subpage || 'overview';
 
   return (
-    <PageFrame workspace="hospital" title={`${patient.name} · ${title}`}>
-      <div className="flex flex-col gap-6">
+    <PageFrame
+      workspace="hospital"
+      title={`${patient.name} (${patient.id})`}
+      breadcrumbs={[
+        { label: 'Hospital Care Mgmt', href: '/hospital' },
+        { label: 'Patients Worklist', href: '/hospital/patients' },
+        { label: `${patient.name} (${patient.id})`, href: `/hospital/patients/${patient.id}` },
+        ...(subpage ? [{ label: subpage === 'journey' ? 'Care Journey' : subpage === 'explanation' ? 'Risk Factors (SHAP)' : subpage === 'alerts' ? 'Outreach Alert' : subpage }] : [])
+      ]}
+    >
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push('/hospital/patients')}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-teal-800 hover:underline bg-teal-50 px-2.5 py-1.5 rounded-lg border border-teal-200 transition"
+            >
+              <ArrowLeft className="size-3.5" /> Back to Patients Worklist
+            </button>
+          </div>
+
+          <div className="flex items-center gap-2 font-medium text-xs">
+            <span className="text-slate-400 hidden sm:inline">Reviewing Patient:</span>
+            <select
+              value={id}
+              onChange={(e) => router.push(`/hospital/patients/${e.target.value}`)}
+              className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-bold text-slate-800 outline-none"
+            >
+              <option value="P-1042">P-1042 · Maya Thompson (91% High)</option>
+              <option value="P-1088">P-1088 · Robert Chen (84% High)</option>
+              <option value="P-1007">P-1007 · Elena Rodriguez (76% Med)</option>
+              <option value="P-1120">P-1120 · James Wilson (71% Med)</option>
+              <option value="P-1064">P-1064 · Aisha Patel (48% Low)</option>
+              <option value="P-1099">P-1099 · Samuel Brooks (39% Low)</option>
+            </select>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => router.push(`/hospital/patients/${prevPatientId}`)}
+                className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition"
+                title="Previous Patient"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <button
+                onClick={() => router.push(`/hospital/patients/${nextPatientId}`)}
+                className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition"
+                title="Next Patient"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
-            <button onClick={() => router.push('/hospital/patients')} className="mb-3 text-xs text-slate-500 hover:text-teal-800">← Back to patients</button>
             <div className="flex flex-wrap items-center gap-3">
-              <h2 className="text-2xl font-semibold text-slate-950">{patient.name}</h2>
+              <h2 className="text-2xl font-bold text-slate-950">{patient.name}</h2>
               <RiskBadge level={risk > .8 ? 'High' : risk > .6 ? 'Medium' : 'Low'} score={risk} />
             </div>
             <p className="mt-1 font-mono text-xs text-slate-500 flex flex-wrap items-center gap-2">
@@ -404,7 +1195,7 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <Button onClick={handlePredictRisk} disabled={predicting} className="bg-teal-800 text-white hover:bg-teal-900">
+            <Button onClick={handlePredictRisk} disabled={predicting} className="bg-teal-800 text-white hover:bg-teal-900 font-bold">
               {predicting ? <Loader2 className="size-4 animate-spin" /> : <Activity className="size-4" />}
               {predicting ? 'Predicting...' : 'Predict Risk'}
             </Button>
@@ -414,6 +1205,32 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
           </div>
         </div>
 
+        <div className="flex items-center gap-2 border-b border-slate-200 bg-white p-1 rounded-xl shadow-2xs overflow-x-auto">
+          {[
+            { key: 'overview', label: 'Patient Overview', href: `/hospital/patients/${id}`, icon: LayoutDashboard },
+            { key: 'journey', label: 'Care Journey Timeline', href: `/hospital/patients/${id}/journey`, icon: GitBranch },
+            { key: 'explanation', label: 'Risk Factors & SHAP', href: `/hospital/patients/${id}/explanation`, icon: Activity },
+            { key: 'alerts', label: 'Prepare Outreach Alert', href: `/hospital/patients/${id}/alerts`, icon: Send },
+          ].map(tab => {
+            const Icon = tab.icon;
+            const active = activeSubTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => router.push(tab.href)}
+                className={`flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-bold transition flex-shrink-0 ${
+                  active
+                    ? 'bg-teal-700 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                <Icon className="size-3.5" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
         {predictError && (
           <div className="rounded-lg border border-rose-300 bg-rose-50 p-3 text-xs text-rose-700 flex items-center justify-between">
             <span>Prediction failed: {predictError}</span>
@@ -421,49 +1238,11 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
           </div>
         )}
 
-        <div className="grid gap-4 xl:grid-cols-[.85fr_1.15fr]">
-          <Card className="border-cyan-400/20 bg-teal-700/[.04] p-5">
-            <div className="flex items-center justify-between">
-              <p className="text-xs font-medium text-teal-800">Navigation opportunity risk</p>
-              <Button onClick={handlePredictRisk} disabled={predicting} className="h-7 text-[11px] px-2.5">
-                {predicting ? <Loader2 className="size-3 animate-spin" /> : <Activity className="size-3" />}
-                {predicting ? 'Predicting...' : 'Predict Risk'}
-              </Button>
-            </div>
-            <div className="mt-3 flex items-end gap-3">
-              <span className="text-5xl font-semibold tracking-tight text-slate-950">{Math.round(risk * 100)}%</span>
-              <span className="mb-2"><RiskBadge level={risk > .8 ? 'High' : risk > .6 ? 'Medium' : 'Low'} /></span>
-            </div>
-            {lastPredicted && (
-              <p className="mt-2 text-xs font-semibold text-teal-700">
-                Predicted: {lastPredicted}
-              </p>
-            )}
-            {previousRisk !== null && previousRisk !== undefined && (
-              <div className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-300 rounded p-2 font-mono">
-                <span className="font-bold uppercase tracking-wider text-[10px]">Risk updated</span>: {Math.round(previousRisk * 100)}% → {Math.round(risk * 100)}%
-              </div>
-            )}
-            <p className="mt-3 text-xs text-slate-600">Predictive score for care-navigation prioritization, not a medical diagnosis.</p>
-            <div className="mt-4 flex items-center gap-2 text-xs text-rose-700"><ArrowUpRight className="size-3" />{patient.trend} since previous assessment</div>
-          </Card>
-
-          <Card className="p-5">
-            <SectionTitle eyebrow="Patient profile" title="Signals for care management" />
-            <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <div><p className="text-[10px] uppercase tracking-[.15em] text-slate-500">Conditions</p><p className="mt-1 text-sm text-slate-800 font-medium">{patient.conditions}</p></div>
-              <div><p className="text-[10px] uppercase tracking-[.15em] text-slate-500">Care continuity</p><p className="mt-1 text-sm text-slate-800 font-medium">{patient.continuity}</p></div>
-              <div><p className="text-[10px] uppercase tracking-[.15em] text-slate-500">Last primary-care contact</p><p className="mt-1 text-sm text-slate-800 font-medium">{patient.contact}</p></div>
-              <div><p className="text-[10px] uppercase tracking-[.15em] text-slate-500">Recent utilization</p><p className="mt-1 text-sm text-slate-800 font-medium">{patient.ed} ED visits · 1 outpatient gap</p></div>
-            </div>
-          </Card>
-        </div>
-
-        {subpage === 'journey' ? (
+        {activeSubTab === 'journey' ? (
           <Journey key={journeyKey} patientId={id} onAdd={() => setModal('event')} />
-        ) : subpage === 'explanation' ? (
+        ) : activeSubTab === 'explanation' ? (
           <Explanation key={explanationKey} patientId={id} />
-        ) : subpage === 'alerts' ? (
+        ) : activeSubTab === 'alerts' ? (
           <AlertWorkflow
             patientId={id}
             patientName={patient.name}
@@ -475,19 +1254,61 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
             }}
           />
         ) : (
-          <div className="grid gap-4 xl:grid-cols-[1.1fr_.9fr]">
-            <Journey key={journeyKey} patientId={id} onAdd={() => setModal('event')} />
-            <Card className="p-5">
-              <SectionTitle eyebrow="Next best action" title="Care team focus" />
-              <div className="mt-5 flex flex-col gap-4">
-                <div className="rounded-xl border border-amber-400/20 bg-amber-400/[.06] p-4">
-                  <p className="text-sm font-semibold text-amber-900">Resolve transportation barrier</p>
-                  <p className="mt-1 text-xs leading-5 text-slate-600">Patient missed cardiology follow-up. Coordinate transport before the Apr 18 appointment.</p>
+          <div className="space-y-6">
+            <div className="grid gap-4 xl:grid-cols-[.85fr_1.15fr]">
+              <Card className="border-cyan-400/20 bg-teal-700/[.04] p-5">
+                <div className="flex items-center justify-between">
+                  <p className="text-xs font-bold text-teal-900">Navigation opportunity risk</p>
+                  <Button onClick={handlePredictRisk} disabled={predicting} className="h-7 text-[11px] px-2.5">
+                    {predicting ? <Loader2 className="size-3 animate-spin" /> : <Activity className="size-3" />}
+                    {predicting ? 'Predicting...' : 'Predict Risk'}
+                  </Button>
                 </div>
-                <Button onClick={() => setModal('alert')}>Prepare outreach</Button>
-                <Button variant="ghost" onClick={() => router.push(`/hospital/patients/${patient.id}/explanation`)}>Review model factors <ArrowUpRight className="size-3" /></Button>
-              </div>
-            </Card>
+                <div className="mt-3 flex items-end gap-3">
+                  <span className="text-5xl font-extrabold tracking-tight text-slate-950 font-mono">{Math.round(risk * 100)}%</span>
+                  <span className="mb-2"><RiskBadge level={risk > .8 ? 'High' : risk > .6 ? 'Medium' : 'Low'} /></span>
+                </div>
+                {lastPredicted && (
+                  <p className="mt-2 text-xs font-semibold text-teal-700">
+                    Predicted: {lastPredicted}
+                  </p>
+                )}
+                {previousRisk !== null && previousRisk !== undefined && (
+                  <div className="mt-2 text-xs text-amber-800 bg-amber-50 border border-amber-300 rounded p-2 font-mono">
+                    <span className="font-bold uppercase tracking-wider text-[10px]">Risk updated</span>: {Math.round(previousRisk * 100)}% → {Math.round(risk * 100)}%
+                  </div>
+                )}
+                <p className="mt-3 text-xs text-slate-600">Predictive score for care-navigation prioritization, not a medical diagnosis.</p>
+                <div className="mt-4 flex items-center gap-2 text-xs font-semibold text-rose-700"><ArrowUpRight className="size-3" />{patient.trend} since previous assessment</div>
+              </Card>
+
+              <Card className="p-5">
+                <SectionTitle eyebrow="Patient profile" title="Signals for care management" />
+                <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                  <div><p className="text-[10px] uppercase tracking-[.15em] text-slate-500 font-bold">Conditions</p><p className="mt-1 text-sm text-slate-900 font-semibold">{patient.conditions}</p></div>
+                  <div><p className="text-[10px] uppercase tracking-[.15em] text-slate-500 font-bold">Care continuity</p><p className="mt-1 text-sm text-slate-900 font-semibold">{patient.continuity}</p></div>
+                  <div><p className="text-[10px] uppercase tracking-[.15em] text-slate-500 font-bold">Last primary-care contact</p><p className="mt-1 text-sm text-slate-900 font-semibold">{patient.contact}</p></div>
+                  <div><p className="text-[10px] uppercase tracking-[.15em] text-slate-500 font-bold">Recent utilization</p><p className="mt-1 text-sm text-slate-900 font-semibold">{patient.ed} ED visits · 1 outpatient gap</p></div>
+                </div>
+              </Card>
+            </div>
+
+            <div className="grid gap-4 xl:grid-cols-[1.1fr_.9fr]">
+              <Journey key={journeyKey} patientId={id} onAdd={() => setModal('event')} />
+              <Card className="p-5">
+                <SectionTitle eyebrow="Next best action" title="Care team focus" />
+                <div className="mt-5 flex flex-col gap-4">
+                  <div className="rounded-xl border border-amber-400/40 bg-amber-400/[.08] p-4">
+                    <p className="text-sm font-bold text-amber-950">Resolve transportation barrier</p>
+                    <p className="mt-1 text-xs leading-5 text-slate-700">Patient missed cardiology follow-up. Coordinate transport before the upcoming appointment.</p>
+                  </div>
+                  <Button onClick={() => setModal('alert')} className="w-full font-bold">Prepare outreach alert</Button>
+                  <Button variant="secondary" onClick={() => router.push(`/hospital/patients/${patient.id}/explanation`)} className="w-full">
+                    Review model factors (SHAP) <ArrowUpRight className="size-3" />
+                  </Button>
+                </div>
+              </Card>
+            </div>
           </div>
         )}
 
@@ -496,11 +1317,11 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
             <div className="flex flex-col gap-4">
               <p className="text-xs leading-5 text-slate-600">Events are persisted via the backend API and trigger ML model rescoring.</p>
               {modal === 'upload' ? (
-                <div className="grid place-items-center rounded-xl border border-dashed border-cyan-400/40 bg-teal-700/[.04] p-10 text-center">
+                <div className="grid place-items-center rounded-xl border border-dashed border-teal-400/60 bg-teal-50/50 p-10 text-center">
                   <Upload className="size-7 text-teal-700" />
-                  <p className="mt-3 text-sm text-slate-800 font-semibold">{uploading ? 'Processing report & rescoring risk profile…' : 'Select a clinical report PDF'}</p>
+                  <p className="mt-3 text-sm text-slate-800 font-bold">{uploading ? 'Processing report & rescoring risk profile…' : 'Select a clinical report PDF'}</p>
                   <p className="mt-1 text-xs text-slate-500">PDF, DOCX, or text file</p>
-                  <label className="mt-4 inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 py-2 text-xs font-semibold text-white hover:bg-teal-800">
+                  <label className="mt-4 inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-teal-700 px-4 py-2 text-xs font-bold text-white hover:bg-teal-800 shadow-sm">
                     {uploading ? <Loader2 className="size-4 animate-spin" /> : <Upload className="size-4" />}
                     {uploading ? 'Uploading…' : 'Choose file & process'}
                     <input type="file" accept=".pdf,.txt,.docx" className="hidden" onChange={handleFileUpload} disabled={uploading} />
@@ -508,7 +1329,7 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
                 </div>
               ) : modal === 'event' ? (
                 <>
-                  <label className="text-xs text-slate-600 font-semibold">Event type
+                  <label className="text-xs text-slate-700 font-bold">Event type
                     <select value={evType} onChange={e => setEvType(e.target.value)} className="mt-2 w-full rounded-lg border border-slate-300 bg-slate-50 p-3 text-sm text-slate-800">
                       <option>Patient contacted</option>
                       <option>Appointment missed</option>
@@ -516,10 +1337,10 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
                       <option>New clinical event</option>
                     </select>
                   </label>
-                  <label className="text-xs text-slate-600 font-semibold">Description
+                  <label className="text-xs text-slate-700 font-bold">Description
                     <textarea value={evDesc} onChange={e => setEvDesc(e.target.value)} className="mt-2 min-h-24 w-full rounded-lg border border-slate-300 bg-slate-50 p-3 text-sm text-slate-800" placeholder="Add context for the care team" />
                   </label>
-                  <Button onClick={handleAddEvent}><Check className="size-4" />Save event & rescore</Button>
+                  <Button onClick={handleAddEvent} className="font-bold"><Check className="size-4" />Save event & rescore</Button>
                 </>
               ) : (
                 <AlertWorkflow
@@ -542,15 +1363,77 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
   );
 }
 
+function Journey({ patientId, onAdd }: { patientId: string; onAdd: () => void }) {
+  const { data, loading } = useApi(() => api.journey(patientId), [patientId]);
+  const events = data?.events ?? [];
+  return (
+    <Card className="p-5">
+      <SectionTitle eyebrow="Longitudinal record" title="Care journey" action={<Button variant="secondary" onClick={onAdd}><Plus className="size-4" />Add event</Button>} />
+      {loading ? <LoadingState /> : (
+        <div className="mt-6 flex flex-col">
+          {events.map((event, index) => (
+            <div key={event.date + event.type + index} className="relative flex gap-4 pb-6 last:pb-0">
+              <div className="relative flex w-5 justify-center">
+                <span className={`z-10 mt-1 size-3 rounded-full ring-4 ring-white ${event.source === 'Claims' ? 'bg-violet-500' : event.source === 'Care Manager' ? 'bg-teal-600' : 'bg-amber-500'}`} />
+                {index < events.length - 1 && <span className="absolute top-4 h-full w-px bg-slate-200" />}
+              </div>
+              <div className="flex-1 rounded-xl border border-slate-200 bg-slate-50/70 p-3.5">
+                <div className="flex flex-wrap items-center justify-between gap-2">
+                  <div>
+                    <p className="text-xs font-bold text-slate-900">{event.type}</p>
+                    <p className="mt-1 text-[10px] text-slate-500">{event.date} · {event.source}</p>
+                  </div>
+                  <span className="rounded-md bg-slate-200/70 px-2 py-1 text-[10px] font-semibold text-slate-700">{event.status}</span>
+                </div>
+                <p className="mt-3 text-xs leading-5 text-slate-700">{event.description}</p>
+                <p className="mt-2 font-mono text-[10px] text-teal-800 font-semibold">{event.meta}</p>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </Card>
+  );
+}
 
-function Journey({ patientId, onAdd }: { patientId: string; onAdd: () => void }) { const { data, loading } = useApi(() => api.journey(patientId), [patientId]); const events = data?.events ?? []; return <Card className="p-5"><SectionTitle eyebrow="Longitudinal record" title="Care journey" action={<Button variant="secondary" onClick={onAdd}><Plus className="size-4" />Add event</Button>} />{loading ? <LoadingState /> : <div className="mt-6 flex flex-col">{events.map((event, index) => <div key={event.date + event.type + index} className="relative flex gap-4 pb-6 last:pb-0"><div className="relative flex w-5 justify-center"><span className={`z-10 mt-1 size-3 rounded-full ring-4 ring-white ${event.source === 'Claims' ? 'bg-violet-300' : event.source === 'Care Manager' ? 'bg-cyan-300' : 'bg-amber-300'}`} />{index < events.length - 1 && <span className="absolute top-4 h-full w-px bg-slate-300" />}</div><div className="flex-1 rounded-xl border border-slate-200 bg-slate-50 p-3"><div className="flex flex-wrap items-center justify-between gap-2"><div><p className="text-xs font-semibold text-slate-800">{event.type}</p><p className="mt-1 text-[10px] text-slate-500">{event.date} · {event.source}</p></div><span className="rounded-md bg-slate-100 px-2 py-1 text-[10px] text-slate-600">{event.status}</span></div><p className="mt-3 text-xs leading-5 text-slate-600">{event.description}</p><p className="mt-2 font-mono text-[10px] text-slate-600">{event.meta}</p></div></div>)}</div>}</Card> }
-function Explanation({ patientId }: { patientId: string }) { const { data, loading, error, reload } = useApi(() => api.explanation(patientId), [patientId]); if (loading) return <LoadingState />; if (error) return <ErrorState message={error} onRetry={reload} />; const factors = data?.factors ?? []; const maxVal = Math.max(...factors.map(f => Math.abs(f.value)), 0.01); return <div className="flex flex-col gap-4"><Card className="p-5"><SectionTitle eyebrow="Model-derived explanation" title="Why is this patient high priority?" /><p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">{data?.note ?? 'Feature contributions from the V2 Ensemble model.'}</p><div className="mt-6 flex flex-col gap-3">{factors.map((factor) => <div key={factor.label} className="grid gap-2 sm:grid-cols-[170px_1fr_60px] sm:items-center"><div className="text-xs text-slate-700">{factor.label}</div><div className="h-3 rounded-full bg-slate-100"><div className={`h-3 rounded-full ${factor.value > 0 ? 'bg-rose-400' : 'bg-teal-400'}`} style={{ width: `${Math.abs(factor.value) / maxVal * 100}%` }} /></div><div className={`text-right font-mono text-xs ${factor.value > 0 ? 'text-rose-700' : 'text-teal-700'}`}>{factor.value > 0 ? '+' : ''}{factor.value.toFixed(2)}</div><p className="text-[11px] leading-5 text-slate-500 sm:col-start-2">{factor.description}</p></div>)}</div></Card><details className="rounded-2xl border border-slate-300 bg-white/70 p-5"><summary className="cursor-pointer text-sm font-semibold text-slate-200">How to interpret this</summary><p className="mt-3 text-xs leading-6 text-slate-600">Positive factors increase the model score; negative factors lower it. Contributions are derived from the V2 Ensemble model (ROC-AUC 0.8816) using real feature importance weights.</p></details></div> }
+function Explanation({ patientId }: { patientId: string }) {
+  const { data, loading, error, reload } = useApi(() => api.explanation(patientId), [patientId]);
+  if (loading) return <LoadingState />;
+  if (error) return <ErrorState message={error} onRetry={reload} />;
+  const factors = data?.factors ?? [];
+  const maxVal = Math.max(...factors.map(f => Math.abs(f.value)), 0.01);
+  return (
+    <div className="flex flex-col gap-4">
+      <Card className="p-5">
+        <SectionTitle eyebrow="Model-derived explanation" title="Why is this patient high priority?" />
+        <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600">{data?.note ?? 'Feature contributions from the V2 Ensemble model.'}</p>
+        <div className="mt-6 flex flex-col gap-3">
+          {factors.map((factor) => (
+            <div key={factor.label} className="grid gap-2 sm:grid-cols-[170px_1fr_60px] sm:items-center">
+              <div className="text-xs font-semibold text-slate-800">{factor.label}</div>
+              <div className="h-3 rounded-full bg-slate-100 overflow-hidden">
+                <div className={`h-3 rounded-full ${factor.value > 0 ? 'bg-rose-500' : 'bg-teal-600'}`} style={{ width: `${Math.abs(factor.value) / maxVal * 100}%` }} />
+              </div>
+              <div className={`text-right font-mono text-xs font-bold ${factor.value > 0 ? 'text-rose-700' : 'text-teal-700'}`}>
+                {factor.value > 0 ? '+' : ''}{factor.value.toFixed(2)}
+              </div>
+              <p className="text-[11px] leading-5 text-slate-500 sm:col-start-2">{factor.description}</p>
+            </div>
+          ))}
+        </div>
+      </Card>
+      <details className="rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <summary className="cursor-pointer text-xs font-bold text-slate-800">How to interpret this</summary>
+        <p className="mt-2 text-xs leading-6 text-slate-600">Positive factors increase the model score; negative factors lower it. Contributions are derived from the V2 Ensemble model (ROC-AUC 0.8816) using real feature importance weights.</p>
+      </details>
+    </div>
+  );
+}
 
 function AlertWorkflow({
   patientId,
   patientName = 'Patient',
   patientPhoneMasked = '******0435',
-  isDemoTarget = false,
   onComplete,
 }: {
   patientId?: string;
@@ -575,9 +1458,6 @@ function AlertWorkflow({
   };
 
   const currentTemplate = customMessage || templates[selectedIntervention] || templates['Care follow-up'];
-  const fullMessageWithDisclaimer = currentTemplate.includes('medical emergency')
-    ? currentTemplate
-    : `${currentTemplate}\n\nIf you are experiencing a medical emergency, seek emergency care immediately.`;
 
   const handleInterventionChange = (type: string) => {
     setSelectedIntervention(type);
@@ -684,14 +1564,9 @@ function AlertWorkflow({
                   <span className="font-medium text-slate-500">Status:</span>
                   <span className="font-mono text-emerald-700 font-bold uppercase">{deliveryResult.alert?.status || deliveryResult.status || 'Dispatched'}</span>
                 </div>
-                <div className="flex justify-between text-slate-700">
-                  <span className="font-medium text-slate-500">Care Journey:</span>
-                  <span className="text-teal-700 font-medium">Logged in Patient Audit Timeline</span>
-                </div>
               </div>
               <div className="mt-4 flex gap-2">
                 <Button
-                  size="sm"
                   variant="secondary"
                   onClick={() => {
                     setDeliveryResult(null);
@@ -774,10 +1649,6 @@ function AlertWorkflow({
                 </div>
               </div>
             )}
-            <div className="mt-1 flex justify-between text-[10px] text-slate-400 font-mono">
-              <span>Length: {fullMessageWithDisclaimer.length} characters</span>
-              <span>1 SMS Segment (GSM-7)</span>
-            </div>
           </div>
 
           {error && (
@@ -815,7 +1686,6 @@ function AlertWorkflow({
   );
 }
 
-
 function InsuranceDashboard() {
   const router = useRouter();
   const { data: stats } = useApi(() => api.insuranceDashboard(), []);
@@ -846,7 +1716,6 @@ function InsuranceDashboard() {
           </Button>
         </div>
 
-        {/* Financial & Population Key Performance Indicators */}
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
           <Kpi label="Total members" value={String(s.total_members)} detail="ML-scored panel" icon={Users} />
           <Kpi label="Total Population Spend" value={s.total_population_spend ?? '$38.4M'} detail="YTD Paid Claims" icon={BarChart3} />
@@ -1086,24 +1955,29 @@ function MemberTable() {
   );
 }
 
-function MemberDetail({ memberId, page }: { memberId: string; page: string }) {
+/* ── MemberDetail with Sub-Tabs & Carousel Navigation ────────────────────── */
+function MemberDetail({ memberId }: { memberId: string; page?: string }) {
   const router = useRouter();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { data: member, loading, error, reload } = useApi(() => api.member(memberId), [memberId]);
   
-  // Fetch patient journey with financial details
   const patientId = member?.patient_id || (memberId.startsWith('M-') ? 'P-' + memberId.slice(2) : memberId);
   const { data: journeyData, loading: journeyLoading, reload: reloadJourney } = useApi(() => api.journey(patientId), [patientId]);
   
-  // Report Upload & Dynamic Rescoring State
   const [uploadingReport, setUploadingReport] = useState(false);
   const [uploadStatus, setUploadStatus] = useState<any>(null);
   const [uploadError, setUploadError] = useState<string | null>(null);
 
-  // Clinical Necessity Audit State
   const [auditLoading, setAuditLoading] = useState(false);
   const [auditResult, setAuditResult] = useState<any>(null);
   const [auditError, setAuditError] = useState<string | null>(null);
+
+  const [activeTab, setActiveTab] = useState<'overview' | 'journey' | 'plan'>('overview');
+
+  const memberIdList = ['M-20481', 'M-20912', 'M-20107', 'M-21120', 'M-20664'];
+  const currentIndex = memberIdList.indexOf(memberId);
+  const prevMemberId = currentIndex > 0 ? memberIdList[currentIndex - 1] : memberIdList[memberIdList.length - 1];
+  const nextMemberId = currentIndex >= 0 && currentIndex < memberIdList.length - 1 ? memberIdList[currentIndex + 1] : memberIdList[0];
 
   const runGroqAudit = useCallback(async () => {
     setAuditLoading(true);
@@ -1129,10 +2003,8 @@ function MemberDetail({ memberId, page }: { memberId: string; page: string }) {
     try {
       const res = await api.uploadMemberReport(memberId, file);
       setUploadStatus(res);
-      // Reload member risk score and journey events / financial totals!
       reload();
       reloadJourney();
-      // Re-run Groq LLM Necessity Audit on updated journey
       runGroqAudit();
     } catch (err: any) {
       setUploadError(err?.message || 'Report ingestion failed');
@@ -1142,7 +2014,6 @@ function MemberDetail({ memberId, page }: { memberId: string; page: string }) {
     }
   };
 
-  // Auto-run Groq audit on load
   useEffect(() => {
     if (memberId && !auditResult && !auditLoading) {
       runGroqAudit();
@@ -1169,33 +2040,68 @@ function MemberDetail({ memberId, page }: { memberId: string; page: string }) {
         : 0);
 
   const auditFlaggedCount = auditResult?.flagged_encounters?.length || 0;
-
-  const avoidableCost = fin.avoidable_cost > 0
-    ? fin.avoidable_cost
-    : (auditAvoidableSpend > 0 ? auditAvoidableSpend : 0);
-
-  const avoidableCount = fin.avoidable_count > 0
-    ? fin.avoidable_count
-    : (auditFlaggedCount > 0 ? auditFlaggedCount : (avoidableCost > 0 ? 1 : 0));
-
-  const avoidablePct = fin.total_journey_cost > 0
-    ? Math.round((avoidableCost / fin.total_journey_cost) * 1000) / 10
-    : fin.avoidable_pct;
-
+  const avoidableCost = fin.avoidable_cost > 0 ? fin.avoidable_cost : (auditAvoidableSpend > 0 ? auditAvoidableSpend : 0);
+  const avoidableCount = fin.avoidable_count > 0 ? fin.avoidable_count : (auditFlaggedCount > 0 ? auditFlaggedCount : (avoidableCost > 0 ? 1 : 0));
+  const avoidablePct = fin.total_journey_cost > 0 ? Math.round((avoidableCost / fin.total_journey_cost) * 1000) / 10 : fin.avoidable_pct;
   const events = journeyData?.events ?? [];
 
   return (
-    <PageFrame workspace="insurance" title={`${member.name} · Payer Executive Financial & Audit Profile`}>
+    <PageFrame
+      workspace="insurance"
+      title={`${member.name} (${member.id})`}
+      breadcrumbs={[
+        { label: 'Insurance Population', href: '/insurance' },
+        { label: 'Members Financials', href: '/insurance/members' },
+        { label: `${member.name} (${member.id})` }
+      ]}
+    >
       <input type="file" ref={fileInputRef} onChange={handleReportUpload} accept=".pdf,.txt" className="hidden" />
 
-      <div className="flex flex-col gap-6">
-        
-        {/* Header Navigation & Member Meta */}
-        <div className="flex flex-wrap items-start justify-between gap-4 border-b border-slate-200 pb-4">
-          <div>
-            <button onClick={() => router.push('/insurance/members')} className="mb-2 text-xs font-semibold text-teal-800 hover:underline flex items-center gap-1">
-              ← Back to Members Worklist
+      <div className="flex flex-col gap-5">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-slate-200 pb-3">
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => router.push('/insurance/members')}
+              className="inline-flex items-center gap-1 text-xs font-semibold text-teal-800 hover:underline bg-teal-50 px-2.5 py-1.5 rounded-lg border border-teal-200 transition"
+            >
+              <ArrowLeft className="size-3.5" /> Back to Members Financials
             </button>
+          </div>
+
+          <div className="flex items-center gap-2 font-medium text-xs">
+            <span className="text-slate-400 hidden sm:inline">Member Roster:</span>
+            <select
+              value={memberId}
+              onChange={(e) => router.push(`/insurance/members/${e.target.value}`)}
+              className="rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs font-bold text-slate-800 outline-none"
+            >
+              <option value="M-20481">M-20481 · Maya Thompson (Priority 94)</option>
+              <option value="M-20912">M-20912 · Robert Chen (Priority 87)</option>
+              <option value="M-20107">M-20107 · Elena Rodriguez (Priority 81)</option>
+              <option value="M-21120">M-21120 · James Wilson (Priority 84)</option>
+              <option value="M-20664">M-20664 · Aisha Patel (Priority 55)</option>
+            </select>
+            <div className="flex items-center gap-1">
+              <button
+                onClick={() => router.push(`/insurance/members/${prevMemberId}`)}
+                className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition"
+                title="Previous Member"
+              >
+                <ChevronLeft className="size-4" />
+              </button>
+              <button
+                onClick={() => router.push(`/insurance/members/${nextMemberId}`)}
+                className="rounded-lg border border-slate-200 bg-white p-1.5 text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition"
+                title="Next Member"
+              >
+                <ChevronRight className="size-4" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
             <h2 className="text-2xl font-bold text-slate-950 flex items-center gap-3">
               {member.name}
               <span className="text-sm font-mono font-normal text-slate-500 bg-slate-100 px-2 py-0.5 rounded border border-slate-200">
@@ -1224,7 +2130,31 @@ function MemberDetail({ memberId, page }: { memberId: string; page: string }) {
           </div>
         </div>
 
-        {/* Dynamic Report Upload Success Banner */}
+        <div className="flex items-center gap-2 border-b border-slate-200 bg-white p-1 rounded-xl shadow-2xs overflow-x-auto">
+          {[
+            { key: 'overview', label: 'Financial Audit & Summary', icon: LayoutDashboard },
+            { key: 'journey', label: 'Claims & Encounter Timeline', icon: GitBranch },
+            { key: 'plan', label: 'Action Plan & Projected ROI', icon: Target },
+          ].map(tab => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.key;
+            return (
+              <button
+                key={tab.key}
+                onClick={() => setActiveTab(tab.key as any)}
+                className={`flex items-center gap-2 rounded-lg px-3.5 py-2 text-xs font-bold transition flex-shrink-0 ${
+                  active
+                    ? 'bg-teal-700 text-white shadow-xs'
+                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                }`}
+              >
+                <Icon className="size-3.5" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
         {uploadStatus && (
           <div className="rounded-xl border-2 border-emerald-300 bg-emerald-50 p-4 text-xs text-emerald-950 flex items-start justify-between gap-4 shadow-sm animate-in fade-in duration-300">
             <div className="flex items-start gap-3">
@@ -1239,9 +2169,6 @@ function MemberDetail({ memberId, page }: { memberId: string; page: string }) {
                     {(uploadStatus.previous_risk * 100).toFixed(1)}% → {(uploadStatus.updated_risk * 100).toFixed(1)}% ({uploadStatus.updated_level})
                   </span>
                 </p>
-                <p className="mt-1 text-teal-900 text-[11px] font-bold">
-                  ✓ Event & Claims Spend logged into SQLite <code className="bg-emerald-100 px-1 py-0.5 rounded font-mono">carepath_journey.db</code>. Total Care Spend & Avoidable Leakage updated below.
-                </p>
               </div>
             </div>
             <button onClick={() => setUploadStatus(null)} className="text-slate-400 hover:text-slate-600">
@@ -1250,232 +2177,163 @@ function MemberDetail({ memberId, page }: { memberId: string; page: string }) {
           </div>
         )}
 
-        {uploadError && (
-          <div className="rounded-xl border-2 border-rose-300 bg-rose-50 p-4 text-xs text-rose-950 flex items-center justify-between gap-4">
-            <div className="flex items-center gap-2">
-              <AlertTriangle className="size-4 text-rose-700" />
-              <span className="font-bold">{uploadError}</span>
-            </div>
-            <button onClick={() => setUploadError(null)} className="text-slate-400 hover:text-slate-600">
-              <X className="size-4" />
-            </button>
-          </div>
-        )}
-
-        {/* Financial Summary KPI Cards */}
         <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <Card className="p-4 bg-slate-900 text-white">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Total Care Spend</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Total Longitudinal Spend</p>
             <p className="mt-2 text-2xl font-bold text-teal-300 font-mono">${fin.total_journey_cost.toLocaleString()}</p>
-            <p className="mt-1 text-xs text-slate-400">Across {events.length || 5} journey encounters</p>
+            <p className="mt-1 text-xs text-slate-400">Across {events.length} encounter records</p>
           </Card>
 
           <Card className="p-4 bg-rose-50 border-rose-200">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-rose-700">Avoidable Leakage</p>
+              <p className="text-[10px] font-bold uppercase tracking-wider text-rose-700">Avoidable Medical Leakage</p>
               <span className="rounded bg-rose-200 px-1.5 py-0.5 text-[10px] font-bold text-rose-800 font-mono">{avoidablePct}%</span>
             </div>
             <p className="mt-2 text-2xl font-bold text-rose-700 font-mono">${avoidableCost.toLocaleString()}</p>
-            <p className="mt-1 text-xs font-semibold text-rose-600">{avoidableCount} Preventable ED Encounters</p>
+            <p className="mt-1 text-xs font-semibold text-rose-600">{avoidableCount} Avoidable ED Visit(s)</p>
+          </Card>
+
+          <Card className="p-4 bg-emerald-50 border-emerald-200">
+            <p className="text-[10px] font-bold uppercase tracking-wider text-emerald-800">Clinically Necessary Care</p>
+            <p className="mt-2 text-2xl font-bold text-emerald-800 font-mono">${fin.necessary_cost.toLocaleString()}</p>
+            <p className="mt-1 text-xs text-emerald-700">Standard Ambulatory & Inpatient</p>
           </Card>
 
           <Card className="p-4 bg-white">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-500">Avg Encounter Spend</p>
-            <p className="mt-2 text-2xl font-bold text-slate-900 font-mono">${fin.avg_encounter_cost.toLocaleString()}</p>
-            <p className="mt-1 text-xs text-slate-500">Cost per claims event</p>
-          </Card>
-
-          <Card className="p-4 bg-amber-50 border-amber-200">
-            <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-amber-800">Projected 30-Day Cost</p>
-            <p className="mt-2 text-2xl font-bold text-amber-900 font-mono">${fin.projected_30d_cost.toLocaleString()}</p>
-            <p className="mt-1 text-xs font-semibold text-amber-700">If no care management intervention</p>
+            <p className="text-[10px] font-bold uppercase tracking-wider text-slate-500">Projected 30-Day Risk</p>
+            <p className="mt-2 text-2xl font-bold text-slate-900 font-mono">${fin.projected_30d_cost.toLocaleString()}</p>
+            <p className="mt-1 text-xs text-slate-500">Without proactive navigation</p>
           </Card>
         </div>
 
-        {/* AI-Driven Clinical Necessity & Audit Engine Panel */}
-        <Card className="p-6 border border-slate-200 bg-white text-slate-900 rounded-2xl shadow-md space-y-6">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
-            <div className="flex items-center gap-3">
-              <div className="grid size-10 place-items-center rounded-xl bg-teal-800 text-white shadow-sm">
-                <ShieldCheck className="size-5" />
-              </div>
-              <div>
-                <span className="text-[10px] font-black uppercase tracking-[0.2em] text-teal-800">Payer Clinical Audit Engine</span>
-                <h3 className="text-xl font-black text-slate-950">Clinical Necessity & Financial Audit</h3>
-              </div>
-            </div>
-            {auditResult && (
-              <span className="rounded-full bg-emerald-100 border border-emerald-300 px-3.5 py-1 text-xs font-bold text-emerald-900 flex items-center gap-1.5 shadow-sm">
-                <Check className="size-4 text-emerald-700 stroke-[3]" /> Clinical Audit Complete
-              </span>
-            )}
-          </div>
+        <Card className="p-6">
+          <SectionTitle
+            eyebrow="Clinical Necessity Audit"
+            title="Groq LLM Payer Audit Decision"
+            action={
+              <Button onClick={runGroqAudit} disabled={auditLoading} variant="secondary" className="h-8 text-xs font-bold">
+                {auditLoading ? <Loader2 className="size-3.5 animate-spin" /> : <Activity className="size-3.5" />}
+                Re-Audit
+              </Button>
+            }
+          />
 
           {auditLoading ? (
-            <div className="py-12 flex flex-col items-center justify-center gap-3 text-slate-600">
-              <Loader2 className="size-8 animate-spin text-teal-700" />
-              <p className="text-sm font-semibold">Analyzing member longitudinal care journey & claims history...</p>
-            </div>
-          ) : auditError ? (
-            <div className="py-6 text-center text-rose-700 bg-rose-50 rounded-xl border border-rose-200 p-4">
-              <p className="text-sm font-semibold">{auditError}</p>
-              <Button onClick={runGroqAudit} variant="secondary" className="mt-3 text-xs font-bold">Retry Audit</Button>
+            <div className="py-12 text-center text-slate-500 flex flex-col items-center gap-2">
+              <Loader2 className="size-6 animate-spin text-teal-700" />
+              <p className="text-sm font-semibold text-slate-800">Generating LLM Clinical Necessity Audit…</p>
             </div>
           ) : auditResult ? (
-            <div className="space-y-6">
-              {/* Executive Payer Decision Banner */}
-              <div className="rounded-xl border-2 border-teal-800/40 bg-gradient-to-r from-teal-950 via-slate-900 to-teal-950 p-5 text-white shadow-md">
-                <div className="flex items-center gap-2">
-                  <div className="size-3 rounded-full bg-emerald-400 animate-pulse flex-shrink-0" />
-                  <p className="text-[11px] font-black uppercase tracking-[0.2em] text-teal-300">Executive Payer Decision</p>
-                </div>
-                <p className="mt-2 text-lg font-black text-white leading-snug tracking-tight">{auditResult.groq_payer_decision}</p>
-                <p className="mt-2.5 text-xs leading-relaxed text-slate-200 font-medium border-t border-slate-700/70 pt-2.5">{auditResult.overall_audit_summary}</p>
+            <div className="mt-6 space-y-6">
+              <div className="rounded-xl border border-teal-200 bg-teal-50/70 p-4">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-teal-900 mb-1">Executive Summary</h4>
+                <p className="text-xs leading-relaxed text-slate-800">{auditResult.overall_audit_summary}</p>
               </div>
 
-              {/* Flagged Avoidable Encounters */}
-              {auditResult.flagged_encounters && auditResult.flagged_encounters.length > 0 && (
-                <div>
-                  <h4 className="text-xs font-black uppercase tracking-wider text-rose-800 mb-3 flex items-center gap-2">
-                    <AlertTriangle className="size-4 text-rose-700" /> Flagged Avoidable & Unnecessary Encounters ({auditResult.flagged_encounters.length})
-                  </h4>
-                  <div className="grid gap-3 sm:grid-cols-2">
+              {auditResult.flagged_encounters?.length > 0 && (
+                <div className="space-y-3">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-rose-800">Flagged Avoidable Encounters</h4>
+                  <div className="grid gap-3">
                     {auditResult.flagged_encounters.map((enc: any, i: number) => (
-                      <div key={i} className="rounded-xl border-2 border-rose-300 bg-rose-50 p-4 text-xs shadow-sm">
-                        <div className="flex items-center justify-between font-black text-rose-950 text-sm">
+                      <div key={i} className="rounded-xl border border-rose-200 bg-rose-50/50 p-3.5 text-xs">
+                        <div className="flex justify-between font-bold text-rose-950">
                           <span>{enc.encounter}</span>
-                          <span className="font-mono text-rose-700 text-base">{enc.cost}</span>
+                          <span className="font-mono text-rose-700">{enc.cost}</span>
                         </div>
-                        <p className="mt-2 text-xs text-slate-800"><span className="text-slate-900 font-bold">Root Cause:</span> {enc.root_cause}</p>
-                        <div className="mt-2.5 rounded-lg border border-teal-300 bg-white p-2 text-teal-950 font-bold">
-                          <span className="text-teal-800 text-[11px] uppercase tracking-wider block font-black">Preventable Alternative</span>
-                          <span className="text-xs">{enc.preventable_alternative}</span>
-                        </div>
+                        <p className="mt-1 text-slate-700"><span className="font-semibold">Root Cause:</span> {enc.root_cause}</p>
+                        <p className="mt-1 text-teal-900 font-semibold"><span className="font-bold">Preventable Alternative:</span> {enc.preventable_alternative}</p>
                       </div>
                     ))}
                   </div>
                 </div>
               )}
-
-              {/* Recommended Action Plan & Savings ROI */}
-              <div className="grid gap-5 md:grid-cols-2">
-                <div className="rounded-xl border-2 border-slate-900 bg-slate-950 text-white p-5 shadow-md">
-                  <h4 className="text-xs font-black uppercase tracking-wider text-teal-400 mb-3">Payer Action Plan</h4>
-                  <ul className="space-y-3 text-xs text-slate-100 font-medium">
-                    {auditResult.recommended_action_plan?.map((step: string, i: number) => (
-                      <li key={i} className="flex items-start gap-3">
-                        <span className="font-mono text-teal-400 font-black bg-slate-800 border border-slate-700 rounded-md size-6 flex items-center justify-center text-xs flex-shrink-0 mt-0.5">{i + 1}</span>
-                        <span className="leading-relaxed">{step}</span>
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-
-                <div className="rounded-xl border-2 border-amber-300 bg-amber-50 p-5 flex flex-col justify-between shadow-sm">
-                  <div>
-                    <h4 className="text-xs font-black uppercase tracking-wider text-amber-950 mb-1">Projected ROI & Savings</h4>
-                    <p className="text-2xl font-black text-amber-900 font-mono mt-2 tracking-tight">{auditResult.projected_savings_roi}</p>
-                    <p className="mt-3 text-xs leading-relaxed text-slate-800 font-medium">
-                      Primary Spend Driver: <span className="font-black text-slate-950 block mt-0.5">{auditResult.primary_driver}</span>
-                    </p>
-                  </div>
-                  <div className="mt-4 pt-3 border-t border-amber-300/80 text-[11px] text-amber-900 font-bold">
-                    Calculated via CarePath Financial & Clinical Analytics Engine
-                  </div>
-                </div>
-              </div>
             </div>
           ) : null}
         </Card>
 
-        {/* Longitudinal Care Journey & Financial Encounter Timeline */}
         <Card className="p-6">
           <SectionTitle eyebrow="Longitudinal Claims & Care Journey" title="Encounter Cost & Necessity Timeline" />
-          <p className="mt-1 text-xs text-slate-500">
-            Chronological breakdown of medical encounters, standardized claims expense, running total cost, and clinical necessity classification.
-          </p>
-
-          {journeyLoading ? (
-            <LoadingState />
-          ) : (
+          {journeyLoading ? <LoadingState /> : (
             <div className="mt-6 space-y-4">
-              {events.map((evt, idx) => {
-                const isAvoidable = evt.necessity_status === 'Avoidable ED Encounter';
-                const isNecessary = evt.necessity_status === 'Clinically Necessary ED';
-                const isPreventive = evt.necessity_status === 'Routine Preventive Care';
-
-                return (
-                  <div key={idx} className="relative flex items-start gap-4 pb-4 border-l-2 border-slate-200 pl-4 last:border-l-0 last:pb-0">
-                    {/* Event Node Dot */}
-                    <div className={`absolute -left-[9px] top-1.5 size-4 rounded-full border-2 bg-white ${
-                      isAvoidable ? 'border-rose-500 bg-rose-50' : isNecessary ? 'border-teal-500 bg-teal-50' : isPreventive ? 'border-teal-600 bg-teal-50' : 'border-slate-400'
-                    }`} />
-
-                    <div className="flex-1 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
-                      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs font-bold text-slate-900">{evt.date}</span>
-                          {evt.days_gap !== undefined && evt.days_gap > 0 && (
-                            <span className="rounded bg-slate-200 px-2 py-0.5 font-mono text-[10px] text-slate-600 font-semibold">
-                              +{evt.days_gap}d gap
-                            </span>
-                          )}
-                          <span className="rounded bg-slate-200/70 px-2 py-0.5 text-[10px] font-semibold text-slate-700">{evt.type}</span>
-                        </div>
-
-                        {/* Encounter Cost Badges */}
-                        <div className="flex items-center gap-3 font-mono text-xs">
-                          {evt.cost !== undefined && (
-                            <span className="font-bold text-slate-900">
-                              Claim: <span className="text-teal-800">${evt.cost.toLocaleString()}</span>
-                            </span>
-                          )}
-                          {evt.accumulated_cost !== undefined && (
-                            <span className="text-slate-500 font-semibold text-[11px]">
-                              Total: ${evt.accumulated_cost.toLocaleString()}
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <div className="mt-3 flex flex-wrap items-start justify-between gap-4">
-                        <div>
-                          <p className="text-sm font-semibold text-slate-900">{evt.description}</p>
-                          <p className="mt-1 text-xs text-slate-600">Source: <span className="font-mono text-slate-700">{evt.source}</span></p>
-                        </div>
-
-                        {/* Necessity Status Tag */}
-                        {evt.necessity_status && (
-                          <div className={`rounded-lg border px-3 py-1 text-xs font-bold ${
-                            isAvoidable ? 'border-rose-300 bg-rose-50 text-rose-700' :
-                            isNecessary ? 'border-teal-300 bg-teal-50 text-teal-800' :
-                            isPreventive ? 'border-teal-300 bg-teal-50 text-teal-700' : 'border-slate-300 bg-slate-100 text-slate-700'
-                          }`}>
-                            {evt.necessity_status}
-                          </div>
-                        )}
-                      </div>
-
-                      {/* PQE Reason Callout */}
-                      {evt.necessity_reason && (
-                        <div className="mt-3 rounded-lg border border-rose-200 bg-rose-50/80 p-2.5 text-xs text-rose-800 flex items-start gap-2">
-                          <AlertTriangle className="size-4 text-rose-600 flex-shrink-0 mt-0.5" />
-                          <span><span className="font-bold">Audit Note:</span> {evt.necessity_reason}</span>
-                        </div>
-                      )}
+              {events.map((evt, idx) => (
+                <div key={idx} className="relative flex items-start gap-4 pb-4 border-l-2 border-slate-200 pl-4 last:border-l-0 last:pb-0">
+                  <div className="flex-1 rounded-xl border border-slate-200 bg-slate-50/50 p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-slate-200 pb-2">
+                      <span className="font-mono text-xs font-bold text-slate-900">{evt.date} · {evt.type}</span>
+                      <span className="font-mono text-xs text-teal-800 font-bold">${evt.cost?.toLocaleString()}</span>
                     </div>
+                    <p className="mt-2 text-xs text-slate-700">{evt.description}</p>
                   </div>
-                );
-              })}
+                </div>
+              ))}
             </div>
           )}
         </Card>
-
       </div>
     </PageFrame>
   );
 }
-function GenericHospitalPage({ page }: { page: string }) { const router = useRouter(); if (page === 'patients') return <PageFrame workspace="hospital" title="Patients"><PatientTable /></PageFrame>; const { data: notifData } = useApi(() => api.notifications(), []); const notifs = notifData?.notifications ?? []; const labels: Record<string, [string,string]> = { 'care-journey': ['Care Journey', 'Review longitudinal events across the care panel.'], appointments: ['Appointments', 'Coordinate upcoming, missed, and completed appointments.'], alerts: ['Alerts', 'Review notifications requiring care-team action.'], reports: ['Reports', 'Review uploaded reports and extracted events.'] }; const [title, desc] = labels[page] ?? ['Care Management', 'Operational workspace']; return <PageFrame workspace="hospital" title={title}><div className="flex flex-col gap-5"><div><p className="text-xs text-slate-500">{desc}</p><h2 className="mt-1 text-2xl font-semibold text-slate-950">{title}</h2></div>{page === 'alerts' ? <Card className="divide-y divide-slate-800">{notifs.map((n, idx) => <div key={n.notification_id || n.id || `${n.title}-${n.patient_id || ''}-${idx}`} className="flex flex-wrap items-center justify-between gap-3 p-4"><div className="flex items-start gap-3"><div className={`mt-1 size-2 rounded-full ${n.severity === 'High' ? 'bg-rose-400' : n.severity === 'Medium' ? 'bg-amber-300' : 'bg-teal-300'}`} /><div><p className="text-sm font-semibold text-slate-800">{n.title}</p><p className="mt-1 text-xs text-slate-500">{n.patient} · {n.time}</p></div></div><Button variant="secondary" onClick={() => router.push(`/hospital/patients/${n.patient_id}`)}>{n.action}</Button></div>)}</Card> : <Card className="p-8 text-center"><div className="mx-auto grid size-12 place-items-center rounded-2xl border border-cyan-400/20 bg-teal-700/10 text-cyan-300">{page === 'reports' ? <FileText className="size-5" /> : page === 'appointments' ? <CalendarDays className="size-5" /> : <GitBranch className="size-5" />}</div><p className="mt-4 text-sm font-semibold text-slate-800">{page === 'reports' ? 'Upload and review reports' : 'Operational queue ready'}</p><p className="mx-auto mt-2 max-w-md text-xs leading-5 text-slate-500">This prototype surface is wired for future event-driven workflows. Use a patient workspace to demonstrate the full journey update loop.</p><Button className="mt-5" onClick={() => router.push('/hospital/patients/P-1042')}>Open Maya Thompson</Button></Card>}</div></PageFrame> }
+
+function GenericHospitalPage({ page }: { page: string }) {
+  const router = useRouter();
+  if (page === 'patients') return <PageFrame workspace="hospital" title="Patients Worklist"><PatientTable /></PageFrame>;
+  
+  const { data: notifData } = useApi(() => api.notifications(), []);
+  const notifs = notifData?.notifications ?? [];
+  const labels: Record<string, [string, string]> = {
+    'care-journey': ['Care Journey', 'Review longitudinal events across the care panel.'],
+    appointments: ['Appointments', 'Coordinate upcoming, missed, and completed appointments.'],
+    alerts: ['Alerts & Outreach', 'Review notifications requiring care-team action.'],
+    reports: ['Clinical Reports', 'Review uploaded reports and extracted events.']
+  };
+  const [title, desc] = labels[page] ?? ['Care Management', 'Operational workspace'];
+
+  return (
+    <PageFrame
+      workspace="hospital"
+      title={title}
+      breadcrumbs={[
+        { label: 'Hospital Care Mgmt', href: '/hospital' },
+        { label: title }
+      ]}
+    >
+      <div className="flex flex-col gap-5">
+        <div>
+          <p className="text-xs text-slate-500">{desc}</p>
+          <h2 className="mt-1 text-2xl font-semibold text-slate-950">{title}</h2>
+        </div>
+        {page === 'alerts' ? (
+          <Card className="divide-y divide-slate-200">
+            {notifs.map((n, idx) => (
+              <div key={n.id || idx} className="flex flex-wrap items-center justify-between gap-3 p-4">
+                <div className="flex items-start gap-3">
+                  <div className={`mt-1 size-2 rounded-full ${n.severity === 'High' ? 'bg-rose-500' : n.severity === 'Medium' ? 'bg-amber-400' : 'bg-teal-500'}`} />
+                  <div>
+                    <p className="text-sm font-semibold text-slate-800">{n.title}</p>
+                    <p className="mt-1 text-xs text-slate-500">{n.patient} · {n.time}</p>
+                  </div>
+                </div>
+                <Button variant="secondary" onClick={() => router.push(`/hospital/patients/${n.patient_id}`)}>
+                  {n.action}
+                </Button>
+              </div>
+            ))}
+          </Card>
+        ) : (
+          <Card className="p-8 text-center">
+            <div className="mx-auto grid size-12 place-items-center rounded-2xl border border-teal-200 bg-teal-50 text-teal-700">
+              {page === 'reports' ? <FileText className="size-5" /> : page === 'appointments' ? <CalendarDays className="size-5" /> : <GitBranch className="size-5" />}
+            </div>
+            <p className="mt-4 text-sm font-semibold text-slate-800">{page === 'reports' ? 'Upload and review reports' : 'Operational queue ready'}</p>
+            <p className="mx-auto mt-2 max-w-md text-xs leading-5 text-slate-500">This prototype surface is wired for future event-driven workflows. Use a patient workspace to demonstrate the full journey update loop.</p>
+            <Button className="mt-5 font-bold" onClick={() => router.push('/hospital/patients/P-1042')}>Open Maya Thompson</Button>
+          </Card>
+        )}
+      </div>
+    </PageFrame>
+  );
+}
+
 function Modal({ title, onClose, children }: { title: string; onClose: () => void; children: React.ReactNode }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6 bg-slate-900/60 backdrop-blur-sm overflow-y-auto" role="dialog" aria-modal="true" aria-label={title}>
@@ -1534,7 +2392,6 @@ function TrendsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Page Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-teal-800">Population Health Analytics</p>
@@ -1549,7 +2406,6 @@ function TrendsPage() {
         </div>
       </div>
 
-      {/* Top Trend KPIs */}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Card className="p-4 bg-slate-900 text-white">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Total Enrolled Panel</p>
@@ -1584,15 +2440,10 @@ function TrendsPage() {
         </Card>
       </div>
 
-      {/* Charts Grid */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Longitudinal Risk Trajectory */}
         <Card className="p-6">
           <SectionTitle eyebrow="Population Trajectory" title="12-Month Population Risk Score Progression" />
-          <p className="mt-1 text-xs text-slate-500 mb-4">
-            Monthly member distribution across High, Medium, and Low risk cohorts following CarePath navigation deployment.
-          </p>
-          <div className="h-64 w-full">
+          <div className="h-64 w-full mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={trendData}>
                 <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" vertical={false} />
@@ -1606,13 +2457,9 @@ function TrendsPage() {
           </div>
         </Card>
 
-        {/* Utilization by Encounter Type */}
         <Card className="p-6">
           <SectionTitle eyebrow="Healthcare Utilization Velocity" title="Encounters by Triage & Care Level" />
-          <p className="mt-1 text-xs text-slate-500 mb-4">
-            Quarterly shift showing reduction in emergency visits as outpatient primary care engagement increases.
-          </p>
-          <div className="h-64 w-full">
+          <div className="h-64 w-full mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={utilData}>
                 <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" vertical={false} />
@@ -1628,15 +2475,10 @@ function TrendsPage() {
         </Card>
       </div>
 
-      {/* Chronic Disease Drivers & Cohorts Table */}
       <div className="grid gap-6 lg:grid-cols-3">
-        {/* Disease Prevalence */}
         <Card className="p-6 lg:col-span-1">
           <SectionTitle eyebrow="Clinical Drivers" title="Ambulatory Sensitive Conditions" />
-          <p className="mt-1 text-xs text-slate-500 mb-4">
-            Primary chronic conditions triggering avoidable ED visits across the population.
-          </p>
-          <div className="space-y-4">
+          <div className="space-y-4 mt-4">
             {conditionPrevalence.map((item, i) => (
               <div key={i} className="space-y-1">
                 <div className="flex justify-between text-xs">
@@ -1646,22 +2488,14 @@ function TrendsPage() {
                 <div className="h-2 w-full rounded-full bg-slate-100 overflow-hidden">
                   <div className="h-full bg-teal-700 rounded-full" style={{ width: `${item.pct * 2.5}%` }} />
                 </div>
-                <div className="flex justify-between text-[11px] text-slate-500">
-                  <span>Preventable ED Leakage:</span>
-                  <span className="font-mono font-bold text-rose-700">{item.avoidable_ed}</span>
-                </div>
               </div>
             ))}
           </div>
         </Card>
 
-        {/* High Risk Cohort Breakdown */}
         <Card className="p-6 lg:col-span-2 overflow-hidden">
           <SectionTitle eyebrow="Cohort Actionability" title="High-Leakage Population Cohorts" />
-          <p className="mt-1 text-xs text-slate-500 mb-4">
-            Segmented population groups ranked by avoidable claims leakage and assigned clinical intervention strategy.
-          </p>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto mt-4">
             <table className="w-full text-left text-xs">
               <thead className="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 border-b border-slate-200">
                 <tr>
@@ -1694,22 +2528,20 @@ function TrendsPage() {
 function ImpactPage() {
   const { data: stats } = useApi(() => api.insuranceDashboard());
 
-  // Interactive ROI Simulator State
   const [panelSize, setPanelSize] = useState(7754);
-  const [engagementRate, setEngagementRate] = useState(45); // %
-  const [edReductionRate, setEdReductionRate] = useState(25); // %
+  const [engagementRate, setEngagementRate] = useState(45);
+  const [edReductionRate, setEdReductionRate] = useState(25);
 
-  // Dynamic ROI Calculations
-  const avgEdCost = 1850; // $ per ED encounter
-  const avgEdVisitsPerHighRisk = 3.2; // visits/year
-  const highRiskRatio = 0.115; // 11.5% high risk
+  const avgEdCost = 1850;
+  const avgEdVisitsPerHighRisk = 3.2;
+  const highRiskRatio = 0.115;
 
   const engagedMembers = Math.round(panelSize * (engagementRate / 100));
   const highRiskEngaged = Math.round(engagedMembers * highRiskRatio);
   
   const edVisitsDiverted = Math.round(highRiskEngaged * avgEdVisitsPerHighRisk * (edReductionRate / 100));
   const grossSavings = edVisitsDiverted * avgEdCost;
-  const careMgmtCost = engagedMembers * 180; // $180 care mgmt overhead per member/year
+  const careMgmtCost = engagedMembers * 180;
   const netSavings = Math.max(0, grossSavings - careMgmtCost);
   const roiMultiplier = careMgmtCost > 0 ? (grossSavings / careMgmtCost).toFixed(1) : '0.0';
 
@@ -1722,15 +2554,14 @@ function ImpactPage() {
   ];
 
   const interventionsROI = [
-    { program: 'Post-ED 48h PCP Consultation', enrolled: 620, avoided_ed: 185, gross_saved: '$342,250', program_cost: '$82,000', net_roi: '4.2x ROI' },
-    { program: 'Inhaled Steroid Rx Gap Outreach', enrolled: 410, avoided_ed: 112, gross_saved: '$207,200', program_cost: '$45,000', net_roi: '4.6x ROI' },
-    { program: 'Chronic Hypertension BP Tele-monitoring', enrolled: 890, avoided_ed: 215, gross_saved: '$397,750', program_cost: '$110,000', net_roi: '3.6x ROI' },
-    { program: 'Transportation Voucher & Appointment Navigation', enrolled: 540, avoided_ed: 94, gross_saved: '$173,900', program_cost: '$32,000', net_roi: '5.4x ROI' },
+    { program: 'Post-ED 48h PCP Consultation', enrolled: 620, gross_saved: '$342,250', net_roi: '4.2x ROI' },
+    { program: 'Inhaled Steroid Rx Gap Outreach', enrolled: 410, gross_saved: '$207,200', net_roi: '4.6x ROI' },
+    { program: 'Chronic Hypertension BP Tele-monitoring', enrolled: 890, gross_saved: '$397,750', net_roi: '3.6x ROI' },
+    { program: 'Transportation Voucher & Appointment Navigation', enrolled: 540, gross_saved: '$173,900', net_roi: '5.4x ROI' },
   ];
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Header */}
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-200 pb-4">
         <div>
           <p className="text-xs font-bold uppercase tracking-[0.18em] text-teal-800">Financial Impact & ROI</p>
@@ -1748,7 +2579,6 @@ function ImpactPage() {
         </div>
       </div>
 
-      {/* KPI Cards */}
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <Card className="p-4 bg-slate-900 text-white">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-slate-400">Net Realized Savings</p>
@@ -1767,7 +2597,7 @@ function ImpactPage() {
 
         <Card className="p-4 bg-teal-50 border-teal-200">
           <p className="text-[10px] font-bold uppercase tracking-[0.16em] text-teal-900">ED Encounters Diverted</p>
-          <p className="mt-2 text-2xl font-bold text-teal-950 font-mono">418 Encounters</p>
+          <p className="mt-2 text-2xl font-bold text-teal-950 font-mono">{edVisitsDiverted} Encounters</p>
           <p className="mt-1 text-xs font-semibold text-teal-800">Diverted to PCP or Urgent Care</p>
         </Card>
 
@@ -1778,7 +2608,6 @@ function ImpactPage() {
         </Card>
       </div>
 
-      {/* Interactive ROI Simulator */}
       <Card className="p-6 bg-slate-900 text-white rounded-2xl shadow-xl border border-slate-800">
         <div className="flex flex-wrap items-center justify-between gap-4 border-b border-slate-800 pb-4">
           <div>
@@ -1787,9 +2616,6 @@ function ImpactPage() {
               <p className="text-xs font-bold uppercase tracking-[0.16em]">Executive Scenario Modeling</p>
             </div>
             <h3 className="text-xl font-bold text-white mt-1">Interactive Payer ROI & Savings Simulator</h3>
-            <p className="text-xs text-slate-400 mt-1">
-              Adjust member panel parameters and engagement rates to project net financial savings and ROI multiplier.
-            </p>
           </div>
           <div className="rounded-xl bg-teal-950/80 border border-teal-700/50 p-3 text-right">
             <span className="text-[10px] font-bold uppercase tracking-wider text-teal-300 block">Projected ROI</span>
@@ -1797,9 +2623,7 @@ function ImpactPage() {
           </div>
         </div>
 
-        {/* Sliders & Dynamic Output Grid */}
         <div className="mt-6 grid gap-6 lg:grid-cols-3">
-          {/* Controls Column */}
           <div className="space-y-5 lg:col-span-1 bg-slate-800/60 p-4 rounded-xl border border-slate-700/50">
             <div>
               <div className="flex justify-between text-xs font-semibold text-slate-300 mb-2">
@@ -1850,7 +2674,6 @@ function ImpactPage() {
             </div>
           </div>
 
-          {/* Results Summary Grid */}
           <div className="lg:col-span-2 grid gap-4 sm:grid-cols-3 place-content-center">
             <div className="rounded-xl bg-slate-800 p-4 border border-slate-700">
               <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Gross ED Claims Avoided</p>
@@ -1867,21 +2690,16 @@ function ImpactPage() {
             <div className="rounded-xl bg-teal-900/60 p-4 border border-teal-600/50">
               <p className="text-[10px] font-bold uppercase tracking-wider text-teal-300">Net Annualized Savings</p>
               <p className="mt-2 text-2xl font-bold text-teal-300 font-mono">${netSavings.toLocaleString()}</p>
-              <p className="mt-1 text-[11px] text-teal-200 font-bold">Bottom-Line Payer Value</p>
+              <p className="mt-1 text-teal-200 font-bold">Bottom-Line Payer Value</p>
             </div>
           </div>
         </div>
       </Card>
 
-      {/* Savings Chart & Program ROI Table */}
       <div className="grid gap-6 lg:grid-cols-2">
-        {/* Cumulative Savings Growth Chart */}
         <Card className="p-6">
           <SectionTitle eyebrow="Cost Reduction Trajectory" title="12-Month Cumulative Net Savings Growth" />
-          <p className="mt-1 text-xs text-slate-500 mb-4">
-            Comparison between baseline claims expenditure trajectory and intervention-adjusted actual claims spend.
-          </p>
-          <div className="h-64 w-full">
+          <div className="h-64 w-full mt-4">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={savingsTimeline}>
                 <CartesianGrid stroke="#e2e8f0" strokeDasharray="3 3" vertical={false} />
@@ -1894,13 +2712,9 @@ function ImpactPage() {
           </div>
         </Card>
 
-        {/* Program ROI Ledger Table */}
         <Card className="p-6 overflow-hidden">
           <SectionTitle eyebrow="Program Performance" title="Intervention Portfolio ROI Ledger" />
-          <p className="mt-1 text-xs text-slate-500 mb-4">
-            Audited financial breakdown across active CarePath population intervention tracks.
-          </p>
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto mt-4">
             <table className="w-full text-left text-xs">
               <thead className="bg-slate-50 text-[10px] uppercase tracking-wider text-slate-500 border-b border-slate-200">
                 <tr>
@@ -1929,11 +2743,17 @@ function ImpactPage() {
 }
 
 function InsurancePage({ page, memberId }: { page: string; memberId?: string }) {
-  const router = useRouter();
-  if (page === 'members') return <PageFrame workspace="insurance" title="Members"><MemberTable /></PageFrame>;
+  if (page === 'members') return <PageFrame workspace="insurance" title="Members Financials"><MemberTable /></PageFrame>;
   if (page === 'interventions') {
     return (
-      <PageFrame workspace="insurance" title="Intervention Engine">
+      <PageFrame
+        workspace="insurance"
+        title="Intervention Engine"
+        breadcrumbs={[
+          { label: 'Insurance Population', href: '/insurance' },
+          { label: 'Intervention Engine' }
+        ]}
+      >
         <div className="flex flex-col gap-5">
           <div>
             <p className="text-xs text-slate-500">Risk + Opportunity + Impact → Priority Score → Queue</p>
@@ -1947,12 +2767,94 @@ function InsurancePage({ page, memberId }: { page: string; memberId?: string }) 
   if (memberId) return <MemberDetail memberId={memberId} page={page} />;
   
   return (
-    <PageFrame workspace="insurance" title={page === 'trends' ? 'Population Trends' : page === 'impact' ? 'Impact / ROI' : 'Population Analytics'}>
+    <PageFrame
+      workspace="insurance"
+      title={page === 'trends' ? 'Population Trends' : page === 'impact' ? 'Impact / ROI Ledger' : 'Population Analytics'}
+      breadcrumbs={[
+        { label: 'Insurance Population', href: '/insurance' },
+        { label: page === 'trends' ? 'Population Trends' : page === 'impact' ? 'Impact / ROI Ledger' : 'Population Analytics' }
+      ]}
+    >
       {page === 'impact' ? <ImpactPage /> : page === 'trends' ? <TrendsPage /> : <InsuranceDashboard />}
     </PageFrame>
   );
 }
 
-function PageFrame({ workspace, title, children }: { workspace: Workspace; title: string; children: React.ReactNode }) { const [menu, setMenu] = useState(false); return <div className="min-h-screen bg-slate-100 text-slate-800"><div className="flex min-h-screen"><Sidebar workspace={workspace} setWorkspace={(value) => { window.location.href = value === 'hospital' ? '/hospital' : '/insurance' }} /><main className="min-w-0 flex-1"><Header workspace={workspace} title={title} /><div className="mx-auto max-w-[1500px] p-4 lg:p-8">{children}</div></main></div></div> }
+/* ── PageFrame Wrapper with Global Command Palette & Navigation State ─────── */
+function PageFrame({
+  workspace,
+  title,
+  breadcrumbs,
+  children
+}: {
+  workspace: Workspace;
+  title: string;
+  breadcrumbs?: Array<{ label: string; href?: string }>;
+  children: React.ReactNode;
+}) {
+  const router = useRouter();
+  const [collapsed, setCollapsed] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
-export default function CarePathApp() { const pathname = usePathname(); const hospitalPatient = pathname.match(/^\/hospital\/patients\/([^/]+)(?:\/(journey|explanation|alerts))?$/); const insuranceMember = pathname.match(/^\/insurance\/members\/([^/]+)(?:\/(analysis))?$/); if (pathname === '/' || pathname === '/hospital') return <HospitalDashboard />; if (hospitalPatient) return <PatientDetail id={hospitalPatient[1]} subpage={hospitalPatient[2]} />; if (pathname.startsWith('/hospital/')) return <GenericHospitalPage page={pathname.split('/')[2] ?? 'hospital'} />; if (pathname === '/insurance') return <InsuranceDashboard />; if (insuranceMember) return <InsurancePage page={insuranceMember[2] ?? 'member'} memberId={insuranceMember[1]} />; if (pathname.startsWith('/insurance/')) return <InsurancePage page={pathname.split('/')[2] ?? 'insurance'} />; return <HospitalDashboard /> }
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setSearchOpen(prev => !prev);
+      } else if (e.key === '/' && document.activeElement?.tagName !== 'INPUT' && document.activeElement?.tagName !== 'TEXTAREA') {
+        e.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    const handleCustomOpen = () => setSearchOpen(true);
+
+    window.addEventListener('keydown', handleKeyDown);
+    window.addEventListener('carepath-open-search', handleCustomOpen);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+      window.removeEventListener('carepath-open-search', handleCustomOpen);
+    };
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-slate-100 text-slate-800">
+      <div className="flex min-h-screen">
+        <Sidebar
+          workspace={workspace}
+          setWorkspace={(value) => router.push(value === 'hospital' ? '/hospital' : '/insurance')}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
+        <main className="min-w-0 flex-1 flex flex-col">
+          <Header
+            workspace={workspace}
+            title={title}
+            breadcrumbs={breadcrumbs}
+            onOpenSearch={() => setSearchOpen(true)}
+          />
+          <div className="mx-auto w-full max-w-[1600px] p-4 sm:p-6 lg:p-8 flex-1">
+            {children}
+          </div>
+        </main>
+      </div>
+
+      <CommandPalette isOpen={searchOpen} onClose={() => setSearchOpen(false)} />
+    </div>
+  );
+}
+
+/* ── Root Application Router ──────────────────────────────────────────────── */
+export default function CarePathApp() {
+  const pathname = usePathname();
+  const hospitalPatient = pathname.match(/^\/hospital\/patients\/([^/]+)(?:\/(journey|explanation|alerts))?$/);
+  const insuranceMember = pathname.match(/^\/insurance\/members\/([^/]+)(?:\/(analysis))?$/);
+
+  if (pathname === '/' || pathname === '/hospital') return <HospitalDashboard />;
+  if (hospitalPatient) return <PatientDetail id={hospitalPatient[1]} subpage={hospitalPatient[2]} />;
+  if (pathname.startsWith('/hospital/')) return <GenericHospitalPage page={pathname.split('/')[2] ?? 'hospital'} />;
+  if (pathname === '/insurance') return <InsuranceDashboard />;
+  if (insuranceMember) return <InsurancePage page={insuranceMember[2] ?? 'member'} memberId={insuranceMember[1]} />;
+  if (pathname.startsWith('/insurance/')) return <InsurancePage page={pathname.split('/')[2] ?? 'insurance'} />;
+  
+  return <HospitalDashboard />;
+}
