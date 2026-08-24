@@ -67,6 +67,17 @@ CarePath Navigator is built with strict privacy guardrails:
 - The AI navigation assistant is hardcoded to block any Personal Health Information (PHI) discussions.
 - Phone numbers and clinical identifiers are masked on public-facing dashboard views.
 
-## 👥 Hackathon Context
+## 👥 Contributors
 
-This repository represents the culmination of extensive data engineering, ML optimization, and full-stack application development targeted at Use Case 7: Avoidable Emergency Department Utilization.
+- **[Akshay G](https://github.com/AkshayG-30)** ([@AkshayG-30](https://github.com/AkshayG-30))
+- **[Bharath B](https://github.com/BharathB777)** ([@BharathB777](https://github.com/BharathB777))
+- **[Dharaneeswaran](https://github.com/Dharaneeswaran)**
+- **[Jayaselan](https://github.com/Jayaselan08)** ([@Jayaselan08](https://github.com/Jayaselan08))
+- **[Mithilesh](https://github.com/MithiMaster)** ([@MithiMaster](https://github.com/MithiMaster))
+- **[Pavan Kumar](https://github.com/Pavankumar)**
+- **[Soniya](https://github.com/Soniya-2025)** ([@Soniya-2025](https://github.com/Soniya-2025))
+
+## 🏆 Hackathon Context
+
+This repository represents the culmination of extensive data engineering, ML optimization, and full-stack application development targeted at Use Case 7: Avoidable Emergency Department Utilization for the **Cognizant × SMVEC Hackathon**.
+
