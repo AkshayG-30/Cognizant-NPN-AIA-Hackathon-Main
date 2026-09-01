@@ -1,0 +1,136 @@
+<mxfile host="app.diagrams.net" agent="Python draw.io generator">
+  <diagram id="carepath-architecture" name="CarePath Architecture">
+    <mxGraphModel dx="2315" dy="1618" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="text_2" parent="1" style="text;html=1;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;align=center;verticalAlign=middle;fontSize=27;fontColor=#1F2937;fontSize=28;fontStyle=1;fontColor=#111827;align=left;" value="CarePath - System Architecture" vertex="1">
+          <mxGeometry height="50" width="1540" x="30" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="section_3" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3FF;strokeColor=#075985;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 9px; text-align: left;&quot;&gt;1. DATA SOURCES&lt;/div&gt;" vertex="1">
+          <mxGeometry height="250" width="230" x="30" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="box_4" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#075985;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;Source Systems&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;📄 Claims Data&lt;br&gt;👥 Beneficiary Data&lt;br&gt;🩺 Diagnosis Codes&lt;br&gt;🔧 Procedure Codes&lt;br&gt;🏥 Provider / Hospital Data&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="200" x="45" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="section_5" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3FF;strokeColor=#0284C7;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(2, 132, 199); padding: 9px; text-align: left;&quot;&gt;2. DATA ENGINEERING &amp;amp; ETL&lt;/div&gt;" vertex="1">
+          <mxGeometry height="250" width="250" x="290" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="box_6" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0284C7;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(2, 132, 199); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;DATA ENGINEERING &amp;amp; ETL PROCESS&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;🧹 Data Cleaning&lt;br&gt;🧹 Deduplication&lt;br&gt;⇆ Standardization&lt;br&gt;🏷 Claim Classification&lt;br&gt;🔎 Feature Extraction&lt;br&gt;🧭 Patient Journey Events&lt;br&gt;&lt;br&gt;⚙️&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="220" x="305" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="section_7" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3FF;strokeColor=#075985;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 9px; text-align: left;&quot;&gt;3. MASTER DATASET&lt;/div&gt;" vertex="1">
+          <mxGeometry height="250" width="220" x="570" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="db_8" parent="1" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#DCEEFF;strokeColor=#075985;strokeWidth=2;fontColor=#111827;shadow=1;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 7px; text-align: center;&quot;&gt;Unified Patient Dataset&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 10px; text-align: center;&quot;&gt;&lt;b&gt;Longitudinal&lt;/b&gt;&lt;br&gt;Patient&lt;br&gt;Care Journey&lt;br&gt;&lt;br&gt;Claims + Events + Features&lt;/div&gt;" vertex="1">
+          <mxGeometry height="145" width="160" x="600" y="155" as="geometry" />
+        </mxCell>
+        <mxCell id="section_9" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E6;strokeColor=#D97706;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(217, 119, 6); padding: 9px; text-align: left;&quot;&gt;4. ML PIPELINE&lt;/div&gt;" vertex="1">
+          <mxGeometry height="330" width="300" x="820" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="box_10" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDF8;strokeColor=#D97706;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(217, 119, 6); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;Feature Engineering&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;• Temporal + Trajectory Features&lt;br&gt;&lt;br&gt;&lt;b&gt;Feature Selection&lt;/b&gt;&lt;br&gt;&lt;br&gt;&lt;b&gt;Model Training&lt;/b&gt;&lt;br&gt;Logistic Regression &amp;nbsp; Random Forest &amp;nbsp; XGBoost&lt;br&gt;&lt;br&gt;↓ Ensemble / Stacking&lt;/div&gt;" vertex="1">
+          <mxGeometry height="245" width="270" x="835" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="section_11" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EEF6FF;strokeColor=#0369A1;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(3, 105, 161); padding: 9px; text-align: left;&quot;&gt;5. MODEL OUTPUTS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="300" width="250" x="1150" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="box_12" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0369A1;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(3, 105, 161); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;Risk &amp;amp; Explainability&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;• Risk Score (0–100)&lt;br&gt;• Risk Level (Low / Medium / High)&lt;br&gt;• Top Risk Factors&lt;br&gt;• Explanation (Feature Importance)&lt;br&gt;• Prediction History&lt;/div&gt;" vertex="1">
+          <mxGeometry height="205" width="220" x="1165" y="145" as="geometry" />
+        </mxCell>
+        <mxCell id="box_13" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#7C3AED;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(76, 29, 149); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;LLM (Groq)&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;🧠 Clinical Reasoning&lt;br&gt;• Care Journey Audit&lt;br&gt;• Member Necessity Analysis&lt;br&gt;• Communication Generation&lt;br&gt;&lt;br&gt;&lt;b&gt;Model:&lt;/b&gt;&lt;br&gt;openai/gpt-oss-20b&lt;/div&gt;" vertex="1">
+          <mxGeometry height="300" width="140" x="1430" y="90" as="geometry" />
+        </mxCell>
+        <mxCell id="section_14" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3FF;strokeColor=#0F3B82;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(15, 59, 130); padding: 9px; text-align: left;&quot;&gt;6. BACKEND (FastAPI)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="245" width="610" x="540" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="box_15" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#0F3B82;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(15, 59, 130); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;API Layer&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;Patient APIs (CRUD) &amp;nbsp; | &amp;nbsp; Risk Prediction API &amp;nbsp; | &amp;nbsp; Risk Ranking API&lt;br&gt;Explanation API &amp;nbsp; | &amp;nbsp; Patient Journey API&lt;br&gt;&lt;br&gt;Report Upload API &amp;nbsp; | &amp;nbsp; Appointment API &amp;nbsp; | &amp;nbsp; Alerts &amp;amp; Notifications&lt;br&gt;Financial/Finpact Analysis &amp;nbsp; | &amp;nbsp; Insurance/Member Analysis&lt;br&gt;&lt;br&gt;&lt;div style=&quot;background:#1479E8;color:white;padding:8px;text-align:center&quot;&gt;&lt;b&gt;Auth, Validation, Error Handling, Logging&lt;/b&gt;&lt;/div&gt;&lt;/div&gt;" vertex="1">
+          <mxGeometry height="180" width="580" x="555" y="505" as="geometry" />
+        </mxCell>
+        <mxCell id="section_16" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3FF;strokeColor=#075985;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 9px; text-align: left;&quot;&gt;7. DATABASE&lt;/div&gt;" vertex="1">
+          <mxGeometry height="245" width="220" x="1180" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="db_17" parent="1" style="shape=cylinder;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#DCEEFF;strokeColor=#075985;strokeWidth=2;fontColor=#111827;shadow=1;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 7px; text-align: center;&quot;&gt;PostgreSQL (Production)&amp;lt;br&amp;gt;or&amp;lt;br&amp;gt;SQLite (Development)&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 10px; text-align: center;&quot;&gt;Patients&lt;br&gt;Journey Events&lt;br&gt;Feature Snapshots&lt;br&gt;Predictions&lt;br&gt;Alerts&lt;br&gt;Notifications&lt;br&gt;Appointments&lt;br&gt;Reports&lt;br&gt;Financial Data&lt;br&gt;Insurance Data&lt;/div&gt;" vertex="1">
+          <mxGeometry height="165" width="170" x="1205" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="section_18" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3FF;strokeColor=#075985;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 9px; text-align: left;&quot;&gt;8. FRONTEND (Next.js + React)&lt;/div&gt;" vertex="1">
+          <mxGeometry height="310" width="450" x="30" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="box_19" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#075985;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;Hospital / Care Management View&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;• Patient Dashboard&lt;br&gt;• Patient Table&lt;br&gt;• Patient Detail&lt;br&gt;• Journey Timeline&lt;br&gt;• Risk Visualization&lt;br&gt;• Alerts &amp;amp; Notifications&lt;br&gt;• Reports &amp;amp; Appointments&lt;br&gt;&lt;br&gt;&lt;b&gt;Insurance / Member View&lt;/b&gt;&lt;br&gt;• Member Dashboard&lt;br&gt;• Member Table&lt;br&gt;• Member Detail&lt;br&gt;• Risk &amp;amp; Impact View&lt;br&gt;• Financial Analysis&lt;br&gt;• Utilization Trends&lt;br&gt;• Alerts &amp;amp; Communication&lt;/div&gt;" vertex="1">
+          <mxGeometry height="235" width="420" x="45" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="section_20" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F4EEFF;strokeColor=#7C3AED;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(124, 58, 237); padding: 9px; text-align: left;&quot;&gt;9. INTEGRATIONS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="245" width="140" x="1430" y="460" as="geometry" />
+        </mxCell>
+        <mxCell id="box_21" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#7C3AED;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(76, 29, 149); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;External Services&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;Groq LLM API&lt;br&gt;&lt;br&gt;✉ Email / SMS Service&lt;br&gt;&lt;br&gt;File Storage (Reports)&lt;br&gt;&lt;br&gt;External EHR&lt;br&gt;&lt;br&gt;Cloud / Deployment&lt;/div&gt;" vertex="1">
+          <mxGeometry height="170" width="120" x="1440" y="515" as="geometry" />
+        </mxCell>
+        <mxCell id="section_22" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF3E6;strokeColor=#D97706;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(217, 119, 6); padding: 9px; text-align: left;&quot;&gt;10. ALERTS &amp;amp; INTERVENTIONS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="120" width="610" x="540" y="735" as="geometry" />
+        </mxCell>
+        <mxCell id="box_23" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFDF8;strokeColor=#D97706;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(217, 119, 6); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;Care Management Actions&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;🔔 High Risk Alerts &amp;nbsp;&amp;nbsp;&amp;nbsp; ✉ Recommended Interventions &amp;nbsp;&amp;nbsp;&amp;nbsp; ✉ Care Manager Notifications &amp;nbsp;&amp;nbsp;&amp;nbsp; 📈 Impact Tracking&lt;/div&gt;" vertex="1">
+          <mxGeometry height="55" width="580" x="555" y="785" as="geometry" />
+        </mxCell>
+        <mxCell id="section_24" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#EAF3FF;strokeColor=#075985;strokeWidth=2;shadow=1;arcSize=10;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 9px; text-align: left;&quot;&gt;11. USERS / STAKEHOLDERS&lt;/div&gt;" vertex="1">
+          <mxGeometry height="90" width="1050" x="350" y="885" as="geometry" />
+        </mxCell>
+        <mxCell id="box_25" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFFFFF;strokeColor=#075985;strokeWidth=2;shadow=1;arcSize=12;align=left;verticalAlign=top;fontSize=13;" value="&lt;div style=&quot;font-weight: bold; color: rgb(255, 255, 255); background: rgb(7, 89, 133); padding: 7px; border-radius: 7px 7px 0px 0px;&quot;&gt;Stakeholders&lt;/div&gt;&lt;div style=&quot;color: rgb(17, 24, 39); padding: 8px; text-align: left; line-height: 1.35;&quot;&gt;👤 Care Managers &amp;nbsp;&amp;nbsp; 👨‍⚕ Doctors &amp;nbsp;&amp;nbsp; 👤 Hospital Admin &amp;nbsp;&amp;nbsp; 👤 Insurance Analysts &amp;nbsp;&amp;nbsp; 👤 Case Managers &amp;nbsp;&amp;nbsp; 👥 Patients / Members&lt;/div&gt;" vertex="1">
+          <mxGeometry height="35" width="1020" x="365" y="925" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_26" edge="1" parent="1" source="box_4" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0F6CBD;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_6" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_27" edge="1" parent="1" source="box_6" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0F6CBD;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="db_8" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_28" edge="1" parent="1" source="db_8" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0F6CBD;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_10" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_29" edge="1" parent="1" source="box_10" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_12" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_30" edge="1" parent="1" source="box_12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7C3AED;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_13" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_31" edge="1" parent="1" source="box_12" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0F6CBD;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_32" edge="1" parent="1" source="box_15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0F6CBD;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="db_17" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_33" edge="1" parent="1" source="db_17" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7C3AED;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_21" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_34" edge="1" parent="1" source="box_15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0F6CBD;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_19" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_35" edge="1" parent="1" source="box_15" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_23" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_36" edge="1" parent="1" source="box_23" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#D97706;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_25" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_37" edge="1" parent="1" source="box_25" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0F6CBD;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_19" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_38" edge="1" parent="1" source="box_21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7C3AED;strokeWidth=2;endArrow=block;endFill=1;dashed=1;dashPattern=6 6;fontSize=13;" target="box_25" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_39" edge="1" parent="1" source="box_21" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#7C3AED;strokeWidth=2;endArrow=block;endFill=1;fontSize=13;" target="box_15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="edge_40" edge="1" parent="1" source="box_25" style="edgeStyle=orthogonalEdgeStyle;rounded=1;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#0F6CBD;strokeWidth=2;endArrow=block;endFill=1;dashed=1;dashPattern=6 6;fontSize=13;" target="box_15" value="">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="text_41" parent="1" style="text;html=1;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;align=center;verticalAlign=middle;fontSize=13;fontColor=#1F2937;fontSize=13;fontStyle=1;fontColor=#1F2937;" value="New Patient Information" vertex="1">
+          <mxGeometry height="45" width="170" x="80" y="790" as="geometry" />
+        </mxCell>
+        <mxCell id="text_42" parent="1" style="text;html=1;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;align=center;verticalAlign=middle;fontSize=13;fontColor=#1F2937;fontSize=13;fontStyle=1;fontColor=#1F2937;" value="Dynamic Risk Recalculation" vertex="1">
+          <mxGeometry height="45" width="210" x="1220" y="780" as="geometry" />
+        </mxCell>
+        <mxCell id="text_43" parent="1" style="text;html=1;whiteSpace=wrap;rounded=0;fillColor=none;strokeColor=none;align=center;verticalAlign=middle;fontSize=13;fontColor=#1F2937;fontSize=11;fontColor=#64748B;align=left;" value="CarePath: AI-powered longitudinal patient risk prediction, explainability, care management and insurance intervention platform" vertex="1">
+          <mxGeometry height="25" width="1540" x="30" y="985" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

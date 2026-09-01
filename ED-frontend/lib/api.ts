@@ -114,6 +114,8 @@ export const api = {
     return get<{ patients: Patient[]; total: number; total_dataset?: number; top1000_cutoff_risk?: number }>(`/api/patients${qs ? `?${qs}` : ''}`)
   },
   patient: (id: string) => get<Patient>(`/api/patients/${id}`),
+  createPatient: (data: { name: string; age: number; sex: string; conditions: string; initial_event_type: string; initial_event_description: string }) =>
+    post<{ status: string; patient_id: string; name: string }>('/api/patients', data),
   explanation: (id: string) => get<{ patient_id: string; model: string; risk_score: number; factors: ShapFactor[]; note: string }>(`/api/patients/${id}/explanation`),
   journey: (id: string) => get<{ patient_id: string; events: JourneyEvent[]; financial_summary?: FinancialSummary }>(`/api/patients/${id}/journey`),
   predictRisk: (id: string) =>

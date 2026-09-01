@@ -738,6 +738,24 @@ function PatientTable({ compact = false }: { compact?: boolean }) {
   const [pageSize, setPageSize] = useState(compact ? 5 : 200);
   const [isBuffering, setIsBuffering] = useState(false);
 
+  const [isAdding, setIsAdding] = useState(false);
+  const [newPatient, setNewPatient] = useState({ name: '', age: 40, sex: 'Male', conditions: '', initial_event_type: 'Initial Consultation', initial_event_description: '' });
+  const [isSaving, setIsSaving] = useState(false);
+
+  const handleAddPatient = async () => {
+    try {
+      setIsSaving(true);
+      const res = await api.createPatient(newPatient);
+      setIsAdding(false);
+      setNewPatient({ name: '', age: 40, sex: 'Male', conditions: '', initial_event_type: 'Initial Consultation', initial_event_description: '' });
+      router.push(`/hospital/patients/${res.patient_id}`);
+    } catch (e) {
+      alert('Failed to add patient');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   useEffect(() => {
     const handler = setTimeout(() => {
       setDebouncedQuery(query);
@@ -815,6 +833,11 @@ function PatientTable({ compact = false }: { compact?: boolean }) {
           )}
         </div>
         <div className="flex flex-wrap items-center gap-2">
+          {!compact && (
+            <Button variant="secondary" onClick={() => setIsAdding(true)} className="mr-2">
+              <Plus className="size-4" /> Add Patient
+            </Button>
+          )}
           {!compact && (
             <div className="flex items-center gap-1 text-xs text-slate-600">
               <span className="text-[11px] font-medium text-slate-500">Batch size:</span>
@@ -951,6 +974,41 @@ function PatientTable({ compact = false }: { compact?: boolean }) {
             </Button>
           </div>
         </div>
+      )}
+
+      {isAdding && (
+        <Modal title="Add New Patient" onClose={() => setIsAdding(false)}>
+          <div className="flex flex-col gap-4">
+            <label className="text-xs text-slate-600 font-semibold">Patient Name
+              <input value={newPatient.name} onChange={e => setNewPatient({...newPatient, name: e.target.value})} className="mt-1 w-full rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm text-slate-800" placeholder="e.g. Akshay" />
+            </label>
+            <div className="grid grid-cols-2 gap-4">
+              <label className="text-xs text-slate-600 font-semibold">Age
+                <input type="number" value={newPatient.age} onChange={e => setNewPatient({...newPatient, age: parseInt(e.target.value) || 0})} className="mt-1 w-full rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm text-slate-800" />
+              </label>
+              <label className="text-xs text-slate-600 font-semibold">Sex
+                <select value={newPatient.sex} onChange={e => setNewPatient({...newPatient, sex: e.target.value})} className="mt-1 w-full rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm text-slate-800">
+                  <option>Male</option><option>Female</option>
+                </select>
+              </label>
+            </div>
+            <label className="text-xs text-slate-600 font-semibold">Conditions
+              <input value={newPatient.conditions} onChange={e => setNewPatient({...newPatient, conditions: e.target.value})} className="mt-1 w-full rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm text-slate-800" placeholder="e.g. Asthma, Hypertension" />
+            </label>
+            <label className="text-xs text-slate-600 font-semibold">Initial Journey Event Type
+              <input value={newPatient.initial_event_type} onChange={e => setNewPatient({...newPatient, initial_event_type: e.target.value})} className="mt-1 w-full rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm text-slate-800" />
+            </label>
+            <label className="text-xs text-slate-600 font-semibold">Event Description
+              <textarea value={newPatient.initial_event_description} onChange={e => setNewPatient({...newPatient, initial_event_description: e.target.value})} className="mt-1 w-full rounded-lg border border-slate-300 bg-slate-50 p-2 text-sm text-slate-800 min-h-16" />
+            </label>
+            <div className="flex justify-end gap-2 mt-2">
+              <Button variant="ghost" onClick={() => setIsAdding(false)}>Cancel</Button>
+              <Button onClick={handleAddPatient} disabled={!newPatient.name || isSaving}>
+                {isSaving ? 'Saving...' : 'Add Patient'}
+              </Button>
+            </div>
+          </div>
+        </Modal>
       )}
     </Card>
   );
@@ -1187,11 +1245,7 @@ function PatientDetail({ id, subpage }: { id: string; subpage?: string }) {
                 <Phone className="size-3" />
                 {patient.phone_masked ?? '******0435'}
               </span>
-              {patient.is_demo_target && (
-                <span className="rounded bg-amber-100 px-1.5 py-0.5 text-[10px] font-bold text-amber-800">
-                  DEMO OVERRIDE
-                </span>
-              )}
+
             </p>
           </div>
           <div className="flex flex-wrap gap-2">
